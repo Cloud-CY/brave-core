@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/ui/android/appmenu/internal/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenu.java b/chrome/browser/ui/android/appmenu/internal/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenu.java
+index 3215767dde35a6f7443df41267780e7d7bc0d856..2887e59e34012543ed33357faa452dfc23af0779 100644
+--- a/chrome/browser/ui/android/appmenu/internal/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenu.java
++++ b/chrome/browser/ui/android/appmenu/internal/java/src/org/chromium/chrome/browser/ui/appmenu/AppMenu.java
+@@ -307,6 +307,7 @@ class AppMenu implements OnItemClickListener, OnKeyListener, AppMenuClickHandler
+                 anchorView,
+                 groupDividerResourceId,
+                 anchorViewOffset);
++        if (this instanceof BraveAppMenu) ((BraveAppMenu) this).updatePopup(mPopup, isByPermanentButton);
+         int[] popupPosition =
+                 getPopupPosition(
+                         mTempLocation,

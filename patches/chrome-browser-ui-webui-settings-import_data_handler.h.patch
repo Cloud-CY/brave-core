@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/ui/webui/settings/import_data_handler.h b/chrome/browser/ui/webui/settings/import_data_handler.h
+index 3283dc96949148645d130c6800c6e3ffcae89659..e16aa59041156fd70b5b3d22af08559a815fd233 100644
+--- a/chrome/browser/ui/webui/settings/import_data_handler.h
++++ b/chrome/browser/ui/webui/settings/import_data_handler.h
+@@ -37,6 +37,7 @@ class ImportDataHandler : public SettingsPageUIHandler,
+   void OnJavascriptAllowed() override {}
+   void OnJavascriptDisallowed() override;
+ 
++  BRAVE_IMPORT_DATA_HANDLER_H
+  private:
+   void StartImport(const importer::SourceProfile& source_profile,
+                    uint16_t imported_items);

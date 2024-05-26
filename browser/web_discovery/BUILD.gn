@@ -1,0 +1,49 @@
+# Copyright (c) 2021 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at http://mozilla.org/MPL/2.0/.
+
+import("//extensions/buildflags/buildflags.gni")
+
+source_set("unit_tests") {
+  if (enable_extensions) {
+    testonly = true
+
+    sources = [ "web_discovery_unittest.cc" ]
+    deps = [
+      "//brave/browser/profiles",
+      "//brave/components/constants",
+      "//brave/components/search_engines",
+      "//chrome/browser",
+      "//chrome/test:test_support",
+      "//components/prefs",
+      "//components/search_engines",
+      "//components/sync_preferences:test_support",
+      "//content/public/browser",
+      "//content/test:test_support",
+      "//testing/gtest",
+    ]
+  }
+}
+
+source_set("browser_tests") {
+  if (enable_extensions) {
+    testonly = true
+    defines = [ "HAS_OUT_OF_PROC_TEST_RUNNER" ]
+
+    sources = [ "web_discovery_browsertest.cc" ]
+    deps = [
+      "//brave/components/search_engines",
+      "//chrome/browser",
+      "//chrome/browser/profiles:profile",
+      "//chrome/browser/ui",
+      "//chrome/test:test_support",
+      "//components/infobars/content",
+      "//components/prefs",
+      "//content/public/browser",
+      "//content/test:test_support",
+      "//testing/gmock",
+      "//testing/gtest",
+    ]
+  }
+}

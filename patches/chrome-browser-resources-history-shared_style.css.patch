@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/resources/history/shared_style.css b/chrome/browser/resources/history/shared_style.css
+index 12398fbab88c139f6e4a211d18ae8c7119512676..37487dc865a4733aad5e616e98fdfa52c722d0f1 100644
+--- a/chrome/browser/resources/history/shared_style.css
++++ b/chrome/browser/resources/history/shared_style.css
+@@ -7,7 +7,7 @@
+  * #import=./shared_vars.css.js
+  * #import=chrome://resources/cr_elements/cr_hidden_style.css.js
+  * #import=chrome://resources/cr_elements/cr_shared_vars.css.js
+- * #include=cr-hidden-style
++ * #include=cr-hidden-style br-shared-style
+  * #css_wrapper_metadata_end */
+ 
+ a {

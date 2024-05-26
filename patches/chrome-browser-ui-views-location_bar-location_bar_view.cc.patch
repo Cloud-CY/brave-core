@@ -1,0 +1,20 @@
+diff --git a/chrome/browser/ui/views/location_bar/location_bar_view.cc b/chrome/browser/ui/views/location_bar/location_bar_view.cc
+index e2da2e75488ad47cb425b67b781785eb7574cd24..0e66077f30ec16a1b7cce6675366aae25024c5c1 100644
+--- a/chrome/browser/ui/views/location_bar/location_bar_view.cc
++++ b/chrome/browser/ui/views/location_bar/location_bar_view.cc
+@@ -662,6 +662,7 @@ void LocationBarView::Layout(PassKey) {
+   // Indentation add padding when the permission chip is visible and replacing
+   // the LHS icon.
+   int text_overriding_permission_chip_indent = 0;
++  BRAVE_LAYOUT_LEADING_DECORATIONS
+   if (should_indent) {
+     icon_left += icon_indent;
+     text_left += text_indent;
+@@ -748,6 +749,7 @@ void LocationBarView::Layout(PassKey) {
+     }
+   };
+ 
++  BRAVE_LAYOUT_TRAILING_DECORATIONS
+   add_trailing_decoration(page_action_icon_container_,
+                           /*intra_item_padding=*/0);
+   for (ContentSettingImageView* view : base::Reversed(content_setting_views_)) {

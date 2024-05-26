@@ -1,0 +1,13 @@
+diff --git a/common/py_utils/py_utils/cloud_storage.py b/common/py_utils/py_utils/cloud_storage.py
+index 3a36a573d8d986a724760769b858435da3936bdc..c4c4914cbf466a34f82a2f1a4980302f3446e4b1 100644
+--- a/common/py_utils/py_utils/cloud_storage.py
++++ b/common/py_utils/py_utils/cloud_storage.py
+@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+ 
+ 
+ PUBLIC_BUCKET = 'chromium-telemetry'
+-PARTNER_BUCKET = 'chrome-partner-telemetry'
++PARTNER_BUCKET = 'brave-telemetry'
+ INTERNAL_BUCKET = 'chrome-telemetry'
+ TELEMETRY_OUTPUT = 'chrome-telemetry-output'
+ 

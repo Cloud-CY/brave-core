@@ -1,0 +1,12 @@
+diff --git a/content/common/frame.mojom b/content/common/frame.mojom
+index d72ce84100f584832b22058648e7f21ae8325236..ba0ae4eeddf51048ad301a59a90cb2b672046fad 100644
+--- a/content/common/frame.mojom
++++ b/content/common/frame.mojom
+@@ -566,6 +566,7 @@ struct CreateNewWindowParams {
+   // Whether the opener will be suppressed in the new window, in which case
+   // scripting the new window is not allowed.
+   bool opener_suppressed;
++  bool no_javascript_access;
+ 
+   // Whether new window is created for a form submission.
+   bool is_form_submission;

@@ -1,0 +1,36 @@
+##
+## Upstream tests to disable
+##
+## When adding a new filter to this list, please include a short description of
+## why the filter is required and create an associated tracking issue.
+##
+
+# This test is flaky: passes locally but fails on CI
+-FileSystemAccessUIHelpersTest.GetElidedPathForDisplayAsTitle
+
+# These tests fail because we modify the version.
+-ChromeBlocklistTrialTest.DefaultRun
+-ChromeBlocklistTrialTest.VerifyFirstRun
+-ChromeBlocklistTrialTest.VersionChanged
+
+# This test fails because we disable SafeBrowsingEnhancedProtection
+-GetUserPopulationForProfileWithCookieTheftExperiments.PopulatesExperimentsForEsb
+
+-All/AppMenuIconControllerTest.*
+-AppServiceProxyTest.*
+-BookmarkEditorViewTest.*
+-ChromeBlacklistTrialTest.*
+-CookieSettingsFactoryTest.*
+-DownloadPrefsTest.*
+-EnterpriseReportingPrivateGetContextInfoOSFirewallTest.*
+-ExtensionServiceTest.*
+-LayoutProviderTest.*
+-NativeDesktopMediaListTest.CollectsCurrentProcessWindows
+-NotificationHelperLaunchesChrome.*
+-PathServiceTest.*
+-PdfPrinterHandlerWinTest.*
+-PlatformStateStoreWinTest.*
+-PrintViewManagerTest.*
+-ProcessSingletonTest.*
+-TaskbarIconFinder.*
+-WebAppShortcutWinTest.*

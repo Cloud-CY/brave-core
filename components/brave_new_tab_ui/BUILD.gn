@@ -1,0 +1,36 @@
+# Copyright (c) 2023 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+
+import("//brave/components/common/typescript.gni")
+import("//mojo/public/tools/bindings/mojom.gni")
+
+transpile_web_ui("brave_new_tab_ui") {
+  entry_points = [ [
+        "brave_new_tab",
+        rebase_path("brave_new_tab.tsx"),
+      ] ]
+  public_deps = [
+    ":mojom_js",
+    "//brave/components/brave_news/common:mojom_js",
+  ]
+  if (!is_android && !is_ios) {
+    public_deps += [
+      "//ui/webui/resources/cr_components/searchbox:mojo_bindings",
+      "//ui/webui/resources/cr_components/searchbox:mojo_bindings_js",
+    ]
+  }
+  resource_name = "brave_new_tab"
+}
+
+pack_web_resources("generated_resources") {
+  resource_name = "brave_new_tab"
+  output_dir = "$root_gen_dir/brave/components/brave_new_tab/resources"
+  deps = [ ":brave_new_tab_ui" ]
+}
+
+mojom("mojom") {
+  sources = [ "brave_new_tab_page.mojom" ]
+  public_deps = [ "//url/mojom:url_mojom_gurl" ]
+}

@@ -1,0 +1,12 @@
+diff --git a/components/content_settings/core/browser/content_settings_uma_util.cc b/components/content_settings/core/browser/content_settings_uma_util.cc
+index ad6118ed676e31326078fd86d016517a98dcb1d2..cc97115fcdf6211865e0082d013b357bb87edd18 100644
+--- a/components/content_settings/core/browser/content_settings_uma_util.cc
++++ b/components/content_settings/core/browser/content_settings_uma_util.cc
+@@ -142,6 +142,7 @@ constexpr auto kHistogramValue = base::MakeFixedFlatMap<ContentSettingsType,
+ 
+     // As mentioned at the top, please don't forget to update ContentType in
+     // enums.xml when you add entries here!
++    BRAVE_HISTOGRAM_VALUE_LIST
+ });
+ 
+ constexpr int kkHistogramValueMax =

@@ -1,0 +1,57 @@
+# Copyright (c) 2021 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at http://mozilla.org/MPL/2.0/.
+
+import("//brave/components/speedreader/common/buildflags/buildflags.gni")
+
+assert(enable_speedreader)
+
+static_library("speedreader") {
+  public_deps = [
+    "rust/ffi",
+    "//brave/components/speedreader/common",
+    "//brave/components/speedreader/common/buildflags",
+  ]
+
+  sources = [
+    "speedreader_body_distiller.cc",
+    "speedreader_body_distiller.h",
+    "speedreader_delegate.h",
+    "speedreader_distilled_page_producer.cc",
+    "speedreader_distilled_page_producer.h",
+    "speedreader_extended_info_handler.cc",
+    "speedreader_extended_info_handler.h",
+    "speedreader_pref_names.h",
+    "speedreader_rewriter_service.cc",
+    "speedreader_rewriter_service.h",
+    "speedreader_service.cc",
+    "speedreader_service.h",
+    "speedreader_util.cc",
+    "speedreader_util.h",
+    "tts_player.cc",
+    "tts_player.h",
+  ]
+
+  deps = [
+    "rust/ffi",
+    "//brave/components/body_sniffer",
+    "//brave/components/resources",
+    "//brave/components/resources:static_resources_grit",
+    "//brave/components/speedreader/common:mojom",
+    "//brave/components/time_period_storage",
+    "//components/content_settings/core/browser",
+    "//components/content_settings/core/common",
+    "//components/keyed_service/core:core",
+    "//components/prefs:prefs",
+    "//components/sessions:sessions",
+    "//components/user_prefs:user_prefs",
+    "//content/public/browser",
+    "//crypto",
+    "//services/network/public/cpp",
+    "//services/network/public/mojom",
+    "//third_party/blink/public/common",
+    "//ui/base",  # For ResourceBundle, consider getting rid of this ?
+    "//url",
+  ]
+}

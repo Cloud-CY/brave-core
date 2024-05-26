@@ -1,0 +1,22 @@
+diff --git a/chrome/browser/first_run/upgrade_util_win.cc b/chrome/browser/first_run/upgrade_util_win.cc
+index a6f742b4263f987d4ee29d465dabf42d7fd8c7a9..e09369814265dd2a101c7a4d709460279e3654dc 100644
+--- a/chrome/browser/first_run/upgrade_util_win.cc
++++ b/chrome/browser/first_run/upgrade_util_win.cc
+@@ -46,7 +46,7 @@
+ #include "components/prefs/pref_service.h"
+ #include "ui/base/ui_base_switches.h"
+ 
+-#if BUILDFLAG(GOOGLE_CHROME_BRANDING)
++#if BUILDFLAG(GOOGLE_CHROME_BRANDING) || defined(OFFICIAL_BUILD)
+ #include "chrome/updater/app/server/win/updater_legacy_idl.h"
+ #endif
+ 
+@@ -60,7 +60,7 @@ bool GetNewerChromeFile(base::FilePath* path) {
+ }
+ 
+ bool InvokeGoogleUpdateForRename() {
+-#if BUILDFLAG(GOOGLE_CHROME_BRANDING)
++#if BUILDFLAG(GOOGLE_CHROME_BRANDING) || defined(OFFICIAL_BUILD)
+   // This has been identified as very slow on some startups. Detailed trace
+   // events below try to shine a light on each steps. crbug.com/1252004
+   TRACE_EVENT0("startup", "upgrade_util::InvokeGoogleUpdateForRename");

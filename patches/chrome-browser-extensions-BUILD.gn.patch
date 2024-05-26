@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/extensions/BUILD.gn b/chrome/browser/extensions/BUILD.gn
+index c5f86222760c8fc7653f9d6a18be37f93b45a3a4..11d693e0a77a8d645b6441e8ecf878303f994ee6 100644
+--- a/chrome/browser/extensions/BUILD.gn
++++ b/chrome/browser/extensions/BUILD.gn
+@@ -1444,6 +1444,7 @@ static_library("extensions") {
+       "//components/enterprise/data_controls",
+     ]
+   }
++  deps += brave_extensions_resources
+ }
+ 
+ proto_library("cws_item_service_proto") {

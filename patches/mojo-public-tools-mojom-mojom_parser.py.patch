@@ -1,0 +1,12 @@
+diff --git a/mojo/public/tools/mojom/mojom_parser.py b/mojo/public/tools/mojom/mojom_parser.py
+index 039c7464268f00dce650e5b9bbe310e685f83e6d..8e98da5b990c3305cd0ff7475ab0f59b68eb6a66 100755
+--- a/mojo/public/tools/mojom/mojom_parser.py
++++ b/mojo/public/tools/mojom/mojom_parser.py
+@@ -492,6 +492,7 @@ already present in the provided output root.""")
+   logging.info('Finished')
+ 
+ 
++from brave_chromium_utils import inline_chromium_src_override; inline_chromium_src_override(globals(), locals())
+ if __name__ == '__main__':
+   Run(sys.argv[1:])
+   # Exit without running GC, which can save multiple seconds due to the large

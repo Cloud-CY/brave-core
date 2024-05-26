@@ -1,0 +1,6 @@
+include_rules = [
+  "+skia/ext/font_utils.h",
+  "+third_party/skia/include/core/SkFontMgr.h",
+  "+third_party/skia/include/core/SkSurface.h",
+  "+ui/gfx",
+]

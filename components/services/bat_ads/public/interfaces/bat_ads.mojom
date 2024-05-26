@@ -1,0 +1,212 @@
+/* Copyright (c) 2019 The Brave Authors. All rights reserved.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at https://mozilla.org/MPL/2.0/. */
+module bat_ads.mojom;
+
+import "brave/components/brave_ads/core/mojom/brave_ads.mojom";
+import "mojo/public/mojom/base/big_string.mojom";
+import "mojo/public/mojom/base/file.mojom";
+import "mojo/public/mojom/base/time.mojom";
+import "mojo/public/mojom/base/values.mojom";
+import "url/mojom/url.mojom";
+
+interface BatAdsService {
+  Create(pending_associated_remote<BatAdsClient> bat_ads_client,
+         pending_associated_receiver<BatAds> bat_ads,
+         pending_receiver<BatAdsClientNotifier>
+             bat_ads_client_notifier) => ();
+};
+
+interface BatAdsClientNotifier {
+  // See AdsClientNotifier for documentation.
+
+  NotifyDidInitializeAds();
+
+  NotifyLocaleDidChange(string locale);
+
+  NotifyPrefDidChange(string path);
+
+  NotifyDidUpdateResourceComponent(string manifest_version, string id);
+
+  NotifyDidUnregisterResourceComponent(string id);
+
+  NotifyRewardsWalletDidUpdate(string payment_id, string recovery_seed);
+
+  NotifyTabHtmlContentDidChange(int32 tab_id,
+                                array<url.mojom.Url> redirect_chain,
+                                mojo_base.mojom.BigString html);
+  NotifyTabTextContentDidChange(int32 tab_id,
+                                array<url.mojom.Url> redirect_chain,
+                                mojo_base.mojom.BigString text);
+  NotifyTabDidStartPlayingMedia(int32 tab_id);
+  NotifyTabDidStopPlayingMedia(int32 tab_id);
+  NotifyTabDidChange(int32 tab_id,
+                     array<url.mojom.Url> redirect_chain,
+                     bool is_new_navigation,
+                     bool is_restoring,
+                     bool is_error_page,
+                     bool is_visible);
+  NotifyDidCloseTab(int32 tab_id);
+
+  NotifyUserGestureEventTriggered(int32 page_transition_type);
+
+  NotifyUserDidBecomeIdle();
+  NotifyUserDidBecomeActive(mojo_base.mojom.TimeDelta idle_time,
+                            bool screen_was_locked);
+
+  NotifyBrowserDidEnterForeground();
+  NotifyBrowserDidEnterBackground();
+  NotifyBrowserDidBecomeActive();
+  NotifyBrowserDidResignActive();
+
+  NotifyDidSolveAdaptiveCaptcha();
+};
+
+interface BatAdsClient {
+  // See AdsClient for documentation.
+
+  [Sync]
+  IsNetworkConnectionAvailable() => (bool available);
+
+  [Sync]
+  IsBrowserActive() => (bool is_browser_active);
+  [Sync]
+  IsBrowserInFullScreenMode() => (bool is_browser_in_full_screen_mode);
+
+  [Sync]
+  CanShowNotificationAds() => (bool can_show);
+  [Sync]
+  CanShowNotificationAdsWhileBrowserIsBackgrounded() => (bool can_show);
+  ShowNotificationAd(mojo_base.mojom.DictionaryValue value);
+  CloseNotificationAd(string placement_id);
+
+  CacheAdEventForInstanceId(string id,
+                     string ad_type,
+                     string confirmation_type,
+                     mojo_base.mojom.Time time);
+  [Sync]
+  GetCachedAdEvents(string ad_type, string confirmation_type) =>
+      (array<mojo_base.mojom.Time> ad_events);
+  ResetAdEventCacheForInstanceId(string id);
+
+  GetBrowsingHistory(int32 max_count, int32 days_ago) =>
+      (array<url.mojom.Url> history);
+
+  UrlRequest(brave_ads.mojom.UrlRequestInfo request) =>
+      (brave_ads.mojom.UrlResponseInfo response);
+
+  Save(string name, string value) => (bool success);
+  Load(string name) => (string? value);
+
+  LoadComponentResource(string id, int32 version) =>
+      (mojo_base.mojom.File? file);
+
+  [Sync]
+  LoadDataResource(string name) => (mojo_base.mojom.BigString value);
+
+  GetScheduledCaptcha(string payment_id) => (string captcha_id);
+  ShowScheduledCaptchaNotification(string payment_id, string captcha_id);
+
+  RunDBTransaction(brave_ads.mojom.DBTransactionInfo transaction) =>
+      (brave_ads.mojom.DBCommandResponseInfo response);
+
+  RecordP2AEvents(array<string> events);
+
+  [Sync]
+  GetProfilePref(string path) => (mojo_base.mojom.Value? value);
+  SetProfilePref(string path, mojo_base.mojom.Value value);
+  ClearProfilePref(string path);
+  [Sync]
+  HasProfilePrefPath(string path) => (bool value);
+
+  [Sync]
+  GetLocalStatePref(string path) => (mojo_base.mojom.Value? value);
+  SetLocalStatePref(string path, mojo_base.mojom.Value value);
+  ClearLocalStatePref(string path);
+  [Sync]
+  HasLocalStatePrefPath(string path) => (bool value);
+
+  Log(string file, int32 line, int32 verbose_level, string message);
+};
+
+interface BatAdsObserver {
+  // See AdsObserver for documentation.
+
+  OnAdRewardsDidChange();
+
+  OnBrowserUpgradeRequiredToServeAds();
+
+  OnIneligibleRewardsWalletToServeAds();
+
+  OnRemindUser(brave_ads.mojom.ReminderType type);
+};
+
+interface BatAds {
+  // See Ads for documentation.
+
+  AddBatAdsObserver(pending_remote<BatAdsObserver> observer);
+
+  SetSysInfo(brave_ads.mojom.SysInfo sys_info);
+
+  SetBuildChannel(brave_ads.mojom.BuildChannelInfo build_channel);
+
+  SetFlags(brave_ads.mojom.Flags flags);
+
+  Initialize(brave_ads.mojom.WalletInfo? wallet) => (bool success);
+  Shutdown() => (bool success);
+
+  GetDiagnostics() => (mojo_base.mojom.ListValue? value);
+
+  GetStatementOfAccounts() => (brave_ads.mojom.StatementInfo? statement);
+
+  MaybeServeInlineContentAd(string dimensions) =>
+      (string dimensions, mojo_base.mojom.DictionaryValue? value);
+  TriggerInlineContentAdEvent(
+      string placement_id,
+      string creative_instance_id,
+      brave_ads.mojom.InlineContentAdEventType event_type) => (bool success);
+
+  MaybeServeNewTabPageAd() => (mojo_base.mojom.DictionaryValue? value);
+  TriggerNewTabPageAdEvent(
+      string placement_id,
+      string creative_instance_id,
+      brave_ads.mojom.NewTabPageAdEventType event_type) => (bool success);
+
+  MaybeGetNotificationAd(string placement_id) =>
+      (mojo_base.mojom.DictionaryValue? value);
+  TriggerNotificationAdEvent(
+      string placement_id,
+      brave_ads.mojom.NotificationAdEventType event_type) => (bool success);
+
+  TriggerPromotedContentAdEvent(
+      string placement_id,
+      string creative_instance_id,
+      brave_ads.mojom.PromotedContentAdEventType event_type) => (bool success);
+
+  TriggerSearchResultAdEvent(
+      brave_ads.mojom.SearchResultAdInfo ad_mojom,
+      brave_ads.mojom.SearchResultAdEventType event_type) => (bool success);
+
+  PurgeOrphanedAdEventsForType(brave_ads.mojom.AdType ad_type) =>
+      (bool success);
+
+  GetHistory(mojo_base.mojom.Time from_time, mojo_base.mojom.Time to_time) =>
+      (mojo_base.mojom.ListValue value);
+
+  ToggleLikeAd(mojo_base.mojom.DictionaryValue value) =>
+      (mojo_base.mojom.DictionaryValue value);
+  ToggleDislikeAd(mojo_base.mojom.DictionaryValue value) =>
+      (mojo_base.mojom.DictionaryValue value);
+
+  ToggleLikeCategory(mojo_base.mojom.DictionaryValue value) =>
+      (mojo_base.mojom.DictionaryValue value);
+  ToggleDislikeCategory(mojo_base.mojom.DictionaryValue value) =>
+      (mojo_base.mojom.DictionaryValue value);
+
+  ToggleSaveAd(mojo_base.mojom.DictionaryValue value) =>
+      (mojo_base.mojom.DictionaryValue value);
+
+  ToggleMarkAdAsInappropriate(mojo_base.mojom.DictionaryValue value) =>
+      (mojo_base.mojom.DictionaryValue value);
+};

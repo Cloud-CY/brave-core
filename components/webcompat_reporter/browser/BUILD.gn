@@ -1,0 +1,29 @@
+# Copyright (c) 2019 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+
+import("//build/config/features.gni")
+
+assert(!is_android)
+
+static_library("browser") {
+  sources = [
+    "fields.cc",
+    "fields.h",
+    "webcompat_report_uploader.cc",
+    "webcompat_report_uploader.h",
+  ]
+
+  deps = [
+    "//base",
+    "//brave/components/brave_referrals/browser",
+    "//brave/components/brave_shields/core/common:mojom",
+    "//brave/components/brave_stats/browser",
+    "//brave/components/constants",
+    "//brave/components/webcompat_reporter/buildflags",
+    "//content/public/browser",
+    "//net",
+    "//services/network/public/cpp",
+  ]
+}

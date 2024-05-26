@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/ui/android/toolbar/java/res/layout/toolbar_tablet.xml b/chrome/browser/ui/android/toolbar/java/res/layout/toolbar_tablet.xml
+index 4cbe04e19ea2c4c48b711bd1f2a9f1682b50b99e..158c6106b004e45f8946abc831a1bc8df1196f82 100644
+--- a/chrome/browser/ui/android/toolbar/java/res/layout/toolbar_tablet.xml
++++ b/chrome/browser/ui/android/toolbar/java/res/layout/toolbar_tablet.xml
+@@ -66,6 +66,7 @@ found in the LICENSE file.
+             android:layout_gravity="center_vertical"
+             android:background="@drawable/modern_toolbar_tablet_text_box_background"
+             android:paddingEnd="@dimen/location_bar_end_padding" />
++        <include layout="@layout/brave_toolbar" android:layout_height="wrap_content" android:layout_width="wrap_content" />
+ 
+         <ViewStub
+             android:id="@+id/optional_button_stub"

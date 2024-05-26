@@ -1,0 +1,12 @@
+diff --git a/build/config/android/BUILD.gn b/build/config/android/BUILD.gn
+index 2124c74e6efd65a55e11ecb7b542e915574f2539..4806c016e2af38f267289d9aa77791b50fa6ad7b 100644
+--- a/build/config/android/BUILD.gn
++++ b/build/config/android/BUILD.gn
+@@ -53,6 +53,7 @@ config("compiler") {
+     # segments to be mapped adjacently, which breakpad relies on.
+     "-Wl,-z,max-page-size=$_max_page_size",
+   ]
++  ldflags += ["-Wl,--allow-multiple-definition"] # Resolve conflict between libgcc++ and rustup symbols (e.g. __divdi3)
+ 
+   if (current_cpu == "arm64") {
+     if (arm_control_flow_integrity == "standard") {

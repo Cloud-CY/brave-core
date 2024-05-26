@@ -1,0 +1,17 @@
+# Copyright (c) 2021 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+
+declare_args() {
+  # On macOS, vpn is not available w/o signing.
+  enable_brave_vpn = is_win || is_android || is_mac
+
+  # vpn panel is desktop specific UI.
+  enable_brave_vpn_panel = is_win || is_mac
+}
+
+declare_args() {
+  # Wireguard is available only on Windows.
+  enable_brave_vpn_wireguard = (is_mac || is_win) && enable_brave_vpn
+}

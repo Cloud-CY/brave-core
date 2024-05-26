@@ -1,0 +1,77 @@
+# Copyright (c) 2021 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+import("//brave/components/playlist/common/buildflags/buildflags.gni")
+
+assert(enable_playlist)
+
+source_set("browser_tests") {
+  testonly = true
+  defines = [ "HAS_OUT_OF_PROC_TEST_RUNNER" ]
+
+  sources = [
+    "mock_playlist_service_observer.cc",
+    "mock_playlist_service_observer.h",
+    "playlist_media_discovery_browsertests.cc",
+  ]
+
+  if (enable_playlist_webui) {
+    sources += [ "playlist_browsertest.cc" ]
+  }
+
+  deps = [
+    "//base",
+    "//brave/components/playlist/browser",
+    "//chrome/app:command_ids",
+    "//chrome/browser",
+    "//chrome/browser/profiles:profile",
+    "//chrome/browser/ui",
+    "//chrome/test:test_support",
+    "//components/network_session_configurator/common",
+    "//content/test:test_support",
+    "//net",
+    "//net:test_support",
+  ]
+
+  if (is_android) {
+    deps += [ "//chrome/test:test_support_ui_android" ]
+  } else {
+    deps += [ "//chrome/test:test_support_ui" ]
+  }
+}
+
+source_set("unit_tests") {
+  testonly = true
+  defines = [ "HAS_OUT_OF_PROC_TEST_RUNNER" ]
+
+  sources = [
+    "mime_util_unittest.cc",
+    "mock_playlist_render_frame_observer_configurator.cc",
+    "mock_playlist_render_frame_observer_configurator.h",
+    "mock_playlist_service_observer.cc",
+    "mock_playlist_service_observer.h",
+    "playlist_background_web_contents_helper_unittest.cc",
+    "playlist_background_web_contents_unittest.cc",
+    "playlist_media_handler_unittest.cc",
+    "playlist_p3a_unittest.cc",
+    "playlist_service_unittest.cc",
+    "playlist_unittest_base.cc",
+    "playlist_unittest_base.h",
+  ]
+
+  deps = [
+    "//base",
+    "//brave/components/playlist/browser",
+    "//chrome/test:test_support",
+    "//components/pref_registry",
+    "//content/test:test_support",
+  ]
+
+  if (is_android) {
+    deps += [ "//chrome/test:test_support_ui_android" ]
+  } else {
+    deps += [ "//chrome/test:test_support_ui" ]
+  }
+}

@@ -1,0 +1,9 @@
+Name: dtoa-short
+URL: https://crates.io/crates/dtoa-short
+Description: Serialize float number and truncate to certain precision
+Version: 0.3.3
+Security Critical: yes
+Shipped: yes
+License: Mozilla Public License 2.0
+License File:
+Revision: 9fcd7c60960f256c6e4f62579cc3d1f305876725

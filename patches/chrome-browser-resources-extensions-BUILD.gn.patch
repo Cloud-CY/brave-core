@@ -1,0 +1,10 @@
+diff --git a/chrome/browser/resources/extensions/BUILD.gn b/chrome/browser/resources/extensions/BUILD.gn
+index 74be318dee06eb77b19cab941bfb6e1837d90a04..e54958711ff87bbaef9c1e93682dea85d021e141 100644
+--- a/chrome/browser/resources/extensions/BUILD.gn
++++ b/chrome/browser/resources/extensions/BUILD.gn
+@@ -107,4 +107,5 @@ build_webui("build") {
+     optimize_webui_host = "extensions"
+     optimize_webui_in_files = [ "extensions.js" ]
+   }
++  import("//brave/browser/resources/extensions/sources.gni") web_component_files += brave_extensions_web_component_files non_web_component_files += brave_extensions_non_web_component_files exclude_ts_preprocess_files = brave_extensions_local_ts_files exclude_html_css_preprocess_files = brave_extensions_local_html_files preprocess_deps = brave_extensions_preprocess_extra_deps
+ }

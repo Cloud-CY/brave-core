@@ -1,0 +1,12 @@
+diff --git a/net/BUILD.gn b/net/BUILD.gn
+index 32643c0b16969e68ef09d263f36a039af927af1b..3de4c51c22cb421795421a043c0a363eae1a4da1 100644
+--- a/net/BUILD.gn
++++ b/net/BUILD.gn
+@@ -1109,6 +1109,7 @@ component("net") {
+       "reporting/reporting_uploader.h",
+     ]
+   }
++  sources += brave_net_sources
+ 
+   if (enable_device_bound_sessions) {
+     sources += [

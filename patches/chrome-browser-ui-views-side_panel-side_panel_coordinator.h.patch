@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/ui/views/side_panel/side_panel_coordinator.h b/chrome/browser/ui/views/side_panel/side_panel_coordinator.h
+index d1840006ae1691a129edd8f7088cc599d7324336..cc3eb163955af83e4b35a3f3191da55ce0cae47f 100644
+--- a/chrome/browser/ui/views/side_panel/side_panel_coordinator.h
++++ b/chrome/browser/ui/views/side_panel/side_panel_coordinator.h
+@@ -55,7 +55,7 @@ class View;
+ // registry's active_entry() then global registry's. These values are reset when
+ // the side panel is closed and |last_active_global_entry_id_| is used to
+ // determine what entry is seen when the panel is reopened.
+-class SidePanelCoordinator final : public SidePanelRegistryObserver,
++class SidePanelCoordinator : public SidePanelRegistryObserver,
+                                    public TabStripModelObserver,
+                                    public views::ViewObserver,
+                                    public PinnedToolbarActionsModel::Observer,

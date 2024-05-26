@@ -1,0 +1,12 @@
+diff --git a/components/error_page/common/localized_error.cc b/components/error_page/common/localized_error.cc
+index f0f0ef8bbdc61dc834b11bb3a41754a3cc4971ac..307fdbc8aa1d808e5fab20694a033b3d236e6651 100644
+--- a/components/error_page/common/localized_error.cc
++++ b/components/error_page/common/localized_error.cc
+@@ -497,6 +497,7 @@ const LocalizedErrorMap* LookupErrorMap(const std::string& error_domain,
+                                         int error_code,
+                                         bool is_secure_dns_network_error,
+                                         bool is_post) {
++  BRAVE_LOOKUP_ERROR_MAP
+   if (error_domain == Error::kNetErrorDomain) {
+     // Display a different page in the special case of navigating through the
+     // history to an uncached page created by a POST.

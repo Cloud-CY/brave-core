@@ -1,0 +1,26 @@
+diff --git a/chrome/browser/browsing_data/chrome_browsing_data_remover_delegate.h b/chrome/browser/browsing_data/chrome_browsing_data_remover_delegate.h
+index cffe328e0303ce8c0bb6ad94ef80331c172acd99..591d95199b6288f75ac94011b5e819d12f2242a2 100644
+--- a/chrome/browser/browsing_data/chrome_browsing_data_remover_delegate.h
++++ b/chrome/browser/browsing_data/chrome_browsing_data_remover_delegate.h
+@@ -95,6 +95,7 @@ class ChromeBrowsingDataRemoverDelegate
+   void OverrideDomainReliabilityClearerForTesting(
+       DomainReliabilityClearer clearer);
+ 
++  BRAVE_CHROME_BROWSING_DATA_REMOVER_DELEGATE_H
+  private:
+   using WebRtcEventLogManager = webrtc_event_logging::WebRtcEventLogManager;
+ 
+@@ -152,11 +153,12 @@ class ChromeBrowsingDataRemoverDelegate
+     kMediaDeviceSalts = 45,
+     // See also kDisableAutoSigninForProfilePasswords.
+     kDisableAutoSigninForAccountPasswords = 46,
++    kIPFSCache = 47,
+ 
+     // Please update ChromeBrowsingDataRemoverTasks in enums.xml and
+     // History.ClearBrowsingData.Duration.ChromeTask.{Task}
+     // in histograms/metadata/history/histograms.xml when adding entries!
+-    kMaxValue = kDisableAutoSigninForAccountPasswords,
++    kMaxValue = kIPFSCache,
+   };
+ 
+   // Returns the suffix for the

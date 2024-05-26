@@ -1,0 +1,12 @@
+diff --git a/tools/binary_size/libsupersize/archive.py b/tools/binary_size/libsupersize/archive.py
+index 4a39f59f479eb7948abe7ac3738a7619184d9cbb..21b9ecba1c40c2a0e378c36b128d019fb3aae108 100644
+--- a/tools/binary_size/libsupersize/archive.py
++++ b/tools/binary_size/libsupersize/archive.py
+@@ -1050,6 +1050,7 @@ def _FilterContainerSpecs(container_specs, container_re=None):
+   ret = []
+   seen_container_names = set()
+   for container_spec in container_specs:
++    if container_spec.container_name.find('libwg-go.so') != -1: continue
+     container_name = container_spec.container_name
+     if container_name in seen_container_names:
+       raise ValueError('Duplicate container name: {}'.format(container_name))

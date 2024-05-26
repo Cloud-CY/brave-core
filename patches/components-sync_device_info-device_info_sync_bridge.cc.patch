@@ -1,0 +1,45 @@
+diff --git a/components/sync_device_info/device_info_sync_bridge.cc b/components/sync_device_info/device_info_sync_bridge.cc
+index 6355ada2e67908671558c8fe748cd906a12b6e6c..058db147e114f404ed10a75f13f1c25354489a38 100644
+--- a/components/sync_device_info/device_info_sync_bridge.cc
++++ b/components/sync_device_info/device_info_sync_bridge.cc
+@@ -273,6 +273,7 @@ std::unique_ptr<DeviceInfoSpecifics> MakeLocalDeviceSpecifics(
+         GetSpecificsFieldNumberFromModelType(data_type));
+   }
+ 
++  BRAVE_MAKE_LOCAL_DEVICE_SPECIFICS
+   return specifics;
+ }
+ 
+@@ -457,6 +458,7 @@ std::optional<ModelError> DeviceInfoSyncBridge::ApplyIncrementalSyncChanges(
+   for (const std::unique_ptr<EntityChange>& change : entity_changes) {
+     const std::string guid = change->storage_key();
+ 
++    BRAVE_DEVICE_INFO_SYNC_BRIDGE_APPLY_SYNC_CHANGES_SKIP_NEXT_IF
+     // Reupload local device if it was deleted from the server.
+     if (local_cache_guid_ == guid &&
+         change->type() == EntityChange::ACTION_DELETE) {
+@@ -467,7 +469,7 @@ std::optional<ModelError> DeviceInfoSyncBridge::ApplyIncrementalSyncChanges(
+     // Ignore any remote changes that have a cache guid that is or was this
+     // local device.
+     if (device_info_prefs_->IsRecentLocalCacheGuid(guid)) {
+-      continue;
++      if (change->type() != EntityChange::ACTION_DELETE) continue;
+     }
+ 
+     if (change->type() == EntityChange::ACTION_DELETE) {
+@@ -748,6 +750,7 @@ void DeviceInfoSyncBridge::OnReadAllMetadata(
+     return;
+   }
+ 
++  BRAVE_ON_READ_ALL_METADATA_CLEAR_PROGRESS_TOKEN
+   // In the regular case for sync being disabled, wait for MergeFullSyncData()
+   // before initializing the LocalDeviceInfoProvider.
+   if (!syncer::IsInitialSyncDone(
+@@ -977,6 +980,7 @@ DeviceInfoSyncBridge::CountActiveDevicesByType() const {
+ 
+ void DeviceInfoSyncBridge::ExpireOldEntries() {
+   TRACE_EVENT0("sync", "DeviceInfoSyncBridge::ExpireOldEntries");
++  BRAVE_SKIP_EXPIRE_OLD_ENTRIES
+   const base::Time expiration_threshold =
+       base::Time::Now() - kExpirationThreshold;
+   std::unordered_set<std::string> cache_guids_to_expire;

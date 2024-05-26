@@ -1,0 +1,21 @@
+diff --git a/chrome/browser/ui/views/overlay/video_overlay_window_views.cc b/chrome/browser/ui/views/overlay/video_overlay_window_views.cc
+index f94dc33f7ffbc13fd9846c5b62f5de3ac80d03ba..d1ed7b078dd7ccb51d739ee5d6e14342695d0bbf 100644
+--- a/chrome/browser/ui/views/overlay/video_overlay_window_views.cc
++++ b/chrome/browser/ui/views/overlay/video_overlay_window_views.cc
+@@ -286,7 +286,7 @@ std::unique_ptr<VideoOverlayWindowViews> VideoOverlayWindowViews::Create(
+   // constructor. It's important that the constructor be private, because it
+   // doesn't initialize the object fully.
+   auto overlay_window =
+-      base::WrapUnique(new VideoOverlayWindowViews(controller));
++      base::WrapUnique(new BraveVideoOverlayWindowViews(controller));
+ 
+   overlay_window->CalculateAndUpdateWindowBounds();
+   overlay_window->SetUpViews();
+@@ -735,6 +735,7 @@ void VideoOverlayWindowViews::UpdateMaxSize(const gfx::Rect& work_area) {
+ 
+   max_size_ = new_max_size;
+ 
++  BRAVE_UPDATE_MAX_SIZE
+   if (!native_widget())
+     return;
+ 

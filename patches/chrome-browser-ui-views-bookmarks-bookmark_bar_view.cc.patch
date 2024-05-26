@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/ui/views/bookmarks/bookmark_bar_view.cc b/chrome/browser/ui/views/bookmarks/bookmark_bar_view.cc
+index da67b388d758305816319ed2651934a4e69acdb3..f7762af312b37f6b50bab3963a8550f8b497ae10 100644
+--- a/chrome/browser/ui/views/bookmarks/bookmark_bar_view.cc
++++ b/chrome/browser/ui/views/bookmarks/bookmark_bar_view.cc
+@@ -856,6 +856,7 @@ void BookmarkBarView::Layout(PassKey) {
+       x = next_x;
+     }
+   }
++  BRAVE_LAYOUT
+ 
+   const bool show_bookmarks_overflow =
+       bookmark_model_->loaded() &&

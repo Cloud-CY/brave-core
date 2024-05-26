@@ -1,0 +1,19 @@
+diff --git a/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl b/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl
+index 73f5cec21b5e154dc2c70cea1b7e8ae2c35dfc04..300a77bd9fc23cf43df32d56183e453648ce5f5b 100644
+--- a/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl
++++ b/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl
+@@ -63,10 +63,10 @@
+ 
+     void clip(optional CanvasFillRule winding);
+     void clip(Path2D path, optional CanvasFillRule winding);
+-    [HighEntropy, Measure] boolean isPointInPath(unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
+-    [HighEntropy, Measure] boolean isPointInPath(Path2D path, unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
+-    [HighEntropy, Measure] boolean isPointInStroke(unrestricted double x, unrestricted double y);
+-    [HighEntropy, Measure] boolean isPointInStroke(Path2D path, unrestricted double x, unrestricted double y);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInPath(unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInPath(Path2D path, unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInStroke(unrestricted double x, unrestricted double y);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInStroke(Path2D path, unrestricted double x, unrestricted double y);
+ 
+     // drawing images
+     [RaisesException] void drawImage(CanvasImageSource image, unrestricted double x, unrestricted double y);

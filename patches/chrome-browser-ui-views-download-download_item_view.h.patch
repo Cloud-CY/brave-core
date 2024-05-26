@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/ui/views/download/download_item_view.h b/chrome/browser/ui/views/download/download_item_view.h
+index afcfee5f503084346fa9a0358d97925c09fa72db..56d9c7df3e76da33e18f4fd2f656b4e38e5470c1 100644
+--- a/chrome/browser/ui/views/download/download_item_view.h
++++ b/chrome/browser/ui/views/download/download_item_view.h
+@@ -115,6 +115,7 @@ class DownloadItemView : public views::View,
+   void OnPaintBackground(gfx::Canvas* canvas) override;
+   void OnPaint(gfx::Canvas* canvas) override;
+   void OnThemeChanged() override;
++  BRAVE_DOWNLOAD_DOWNLOAD_ITEM_VIEW_H_
+ 
+   // ui::LayerDelegate:
+   void OnDeviceScaleFactorChanged(float old_device_scale_factor,

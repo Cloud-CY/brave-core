@@ -1,0 +1,12 @@
+diff --git a/net/proxy_resolution/configured_proxy_resolution_service.cc b/net/proxy_resolution/configured_proxy_resolution_service.cc
+index 6c4f0f8c3440b43bf46a7bf4b9e86b6a8d8648e5..39355266fa93a0afd4d80d4c7bb8faa35562c63e 100644
+--- a/net/proxy_resolution/configured_proxy_resolution_service.cc
++++ b/net/proxy_resolution/configured_proxy_resolution_service.cc
+@@ -988,6 +988,7 @@ int ConfiguredProxyResolutionService::ResolveProxy(
+   // Check if the request can be completed right away. (This is the case when
+   // using a direct connection for example).
+   int rv = TryToCompleteSynchronously(url, result);
++  BRAVE_CONFIGURED_PROXY_RESOLUTION_SERVICE_RESOLVE_PROXY
+   if (rv != ERR_IO_PENDING) {
+     rv = DidFinishResolvingProxy(url, network_anonymization_key, method, result,
+                                  rv, net_log);

@@ -1,0 +1,25 @@
+include_rules = [
+  "+components/content_settings/core",
+  "+components/prefs",
+  "+components/body_sniffer",
+  "+components/sessions/content",
+  "+content/public/browser",
+  "+content/public/common",
+  "+crypto",
+  "+services/network/public",
+  "+services/network/public/cpp",
+  "+services/network/public/mojom",
+  "+ui/base",
+]
+
+specific_include_rules = {
+  "speedreader_service.h": [
+    "+components/keyed_service/core",
+  ],
+  "speedreader_throttle.h": [
+    "+third_party/blink/public",
+  ],
+  "url_readable_hints.cc": [
+    "+third_party/re2",
+  ],
+}

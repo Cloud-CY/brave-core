@@ -1,0 +1,1366 @@
+# Copyright (c) 2022 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+
+import("//brave/browser/ethereum_remote_client/buildflags/buildflags.gni")
+import("//brave/browser/shell_integrations/buildflags/buildflags.gni")
+import("//brave/build/config.gni")
+import("//brave/components/ai_chat/core/common/buildflags/buildflags.gni")
+import("//brave/components/brave_player/common/buildflags/buildflags.gni")
+import("//brave/components/brave_vpn/common/buildflags/buildflags.gni")
+import("//brave/components/brave_wayback_machine/buildflags/buildflags.gni")
+import("//brave/components/commander/common/buildflags/buildflags.gni")
+import("//brave/components/ipfs/buildflags/buildflags.gni")
+import("//brave/components/ntp_background_images/buildflags/buildflags.gni")
+import("//brave/components/playlist/common/buildflags/buildflags.gni")
+import("//brave/components/request_otr/common/buildflags/buildflags.gni")
+import("//brave/components/speedreader/common/buildflags/buildflags.gni")
+import("//brave/components/text_recognition/common/buildflags/buildflags.gni")
+import("//brave/components/tor/buildflags/buildflags.gni")
+import("//build/config/features.gni")
+import("//chrome/common/features.gni")
+import("//components/gcm_driver/config.gni")
+import("//mojo/public/tools/bindings/mojom.gni")
+import("//printing/buildflags/buildflags.gni")
+import("//third_party/widevine/cdm/widevine.gni")
+
+source_set("ui") {
+  # Depend on //chrome/browser/ui instead of //brave/browser/ui.
+  visibility = [
+    "//chrome/browser",
+    "//chrome/browser/ui",
+    "//chrome/browser/ui/webui:configs",
+  ]
+
+  deps = [ "//brave/components/brave_shields/core/browser" ]
+
+  public_deps = []
+  sources = [
+    "brave_ui_features.cc",
+    "brave_ui_features.h",
+    "webui/brave_adblock_internals_ui.cc",
+    "webui/brave_adblock_internals_ui.h",
+    "webui/brave_adblock_ui.cc",
+    "webui/brave_adblock_ui.h",
+    "webui/brave_rewards_internals_ui.cc",
+    "webui/brave_rewards_internals_ui.h",
+    "webui/brave_rewards_page_ui.cc",
+    "webui/brave_rewards_page_ui.h",
+    "webui/brave_rewards_source.cc",
+    "webui/brave_rewards_source.h",
+    "webui/brave_wallet/line_chart/line_chart_ui.cc",
+    "webui/brave_wallet/line_chart/line_chart_ui.h",
+    "webui/brave_wallet/market/market_ui.cc",
+    "webui/brave_wallet/market/market_ui.h",
+    "webui/brave_wallet/nft/nft_ui.cc",
+    "webui/brave_wallet/nft/nft_ui.h",
+    "webui/brave_web_ui_controller_factory.cc",
+    "webui/brave_web_ui_controller_factory.h",
+    "webui/brave_webui_source.cc",
+    "webui/brave_webui_source.h",
+    "webui/skus_internals_ui.cc",
+    "webui/skus_internals_ui.h",
+  ]
+
+  # It doesn't make sense to view the webcompat webui on iOS & Android.
+  if (!is_android && !is_ios) {
+    sources += [
+      "webui/webcompat_reporter/webcompat_reporter_ui.cc",
+      "webui/webcompat_reporter/webcompat_reporter_ui.h",
+    ]
+  }
+
+  if (enable_ipfs_internals_webui) {
+    sources += [
+      "webui/ipfs_ui.cc",
+      "webui/ipfs_ui.h",
+    ]
+  }
+
+  if (enable_ai_chat) {
+    sources += [
+      "webui/ai_chat/ai_chat_ui.cc",
+      "webui/ai_chat/ai_chat_ui.h",
+      "webui/ai_chat/ai_chat_ui_page_handler.cc",
+      "webui/ai_chat/ai_chat_ui_page_handler.h",
+    ]
+
+    if (enable_print_preview) {
+      sources += [
+        "webui/ai_chat/print_preview_extractor.cc",
+        "webui/ai_chat/print_preview_extractor.h",
+      ]
+      deps += [
+        "//chrome/browser/pdf",
+        "//chrome/browser/pdf:pdf_pref_names",
+        "//chrome/services/printing/public/mojom",
+        "//components/pdf/browser",
+        "//components/printing/browser",
+        "//components/printing/common:mojo_interfaces",
+        "//components/services/print_compositor/public/mojom",
+        "//pdf:buildflags",
+        "//pdf:features",
+      ]
+    }
+
+    if (is_android) {
+      sources += [
+        "android/ai_chat/brave_leo_settings_launcher_helper.cc",
+        "android/ai_chat/brave_leo_settings_launcher_helper.h",
+      ]
+
+      deps += [ "//brave/build/android:jni_headers" ]
+    }
+  }
+
+  if (!is_android) {
+    sources += [
+      "bookmark/bookmark_helper.cc",
+      "bookmark/bookmark_helper.h",
+      "bookmark/bookmark_prefs_service.cc",
+      "bookmark/bookmark_prefs_service.h",
+      "bookmark/bookmark_prefs_service_factory.cc",
+      "bookmark/bookmark_prefs_service_factory.h",
+      "bookmark/brave_bookmark_prefs.cc",
+      "bookmark/brave_bookmark_prefs.h",
+      "bookmark/brave_bookmark_tab_helper.cc",
+      "bookmark/brave_bookmark_tab_helper.h",
+      "brave_browser.cc",
+      "brave_browser.h",
+      "brave_browser_command_controller.cc",
+      "brave_browser_command_controller.h",
+      "brave_browser_content_setting_bubble_model_delegate.cc",
+      "brave_browser_content_setting_bubble_model_delegate.h",
+      "brave_browser_window.cc",
+      "brave_browser_window.h",
+      "brave_icon_with_badge_image_source.cc",
+      "brave_icon_with_badge_image_source.h",
+      "brave_layout_constants.cc",
+      "brave_layout_constants.h",
+      "brave_pages.cc",
+      "brave_pages.h",
+      "brave_shields_data_controller.cc",
+      "brave_shields_data_controller.h",
+      "brave_tab_strip_model_delegate.cc",
+      "brave_tab_strip_model_delegate.h",
+      "brave_view_ids.h",
+      "browser_commands.cc",
+      "browser_commands.h",
+      "browser_dialogs.h",
+      "content_settings/brave_autoplay_blocked_image_model.cc",
+      "content_settings/brave_autoplay_blocked_image_model.h",
+      "content_settings/brave_autoplay_content_setting_bubble_model.cc",
+      "content_settings/brave_autoplay_content_setting_bubble_model.h",
+      "content_settings/brave_content_setting_image_models.cc",
+      "content_settings/brave_content_setting_image_models.h",
+      "omnibox/brave_omnibox_client_impl.cc",
+      "omnibox/brave_omnibox_client_impl.h",
+      "page_action/brave_page_action_icon_type.h",
+      "session_crashed_bubble_brave.cc",
+      "side_panel/ai_chat/ai_chat_side_panel_utils.cc",
+      "side_panel/ai_chat/ai_chat_side_panel_utils.h",
+      "sidebar/sidebar.h",
+      "sidebar/sidebar_controller.cc",
+      "sidebar/sidebar_controller.h",
+      "sidebar/sidebar_model.cc",
+      "sidebar/sidebar_model.h",
+      "sidebar/sidebar_service_factory.cc",
+      "sidebar/sidebar_service_factory.h",
+      "sidebar/sidebar_tab_helper.cc",
+      "sidebar/sidebar_tab_helper.h",
+      "sidebar/sidebar_utils.cc",
+      "sidebar/sidebar_utils.h",
+      "startup/brave_startup_tab_provider_impl.cc",
+      "startup/brave_startup_tab_provider_impl.h",
+      "tabs/brave_tab_color_mixer.cc",
+      "tabs/brave_tab_color_mixer.h",
+      "tabs/brave_tab_layout_constants.h",
+      "tabs/brave_tab_menu_model.cc",
+      "tabs/brave_tab_menu_model.h",
+      "tabs/brave_tab_prefs.cc",
+      "tabs/brave_tab_prefs.h",
+      "tabs/brave_tab_strip_model.cc",
+      "tabs/brave_tab_strip_model.h",
+      "tabs/brave_tab_style.h",
+      "tabs/features.cc",
+      "tabs/features.h",
+      "tabs/shared_pinned_tab_dummy_view.h",
+      "tabs/shared_pinned_tab_service.cc",
+      "tabs/shared_pinned_tab_service.h",
+      "tabs/shared_pinned_tab_service_factory.cc",
+      "tabs/shared_pinned_tab_service_factory.h",
+      "tabs/split_view_browser_data.cc",
+      "tabs/split_view_browser_data.h",
+      "tabs/split_view_browser_data_observer.h",
+      "tabs/split_view_tab_strip_model_adapter.cc",
+      "tabs/split_view_tab_strip_model_adapter.h",
+      "toolbar/app_menu_icons.cc",
+      "toolbar/app_menu_icons.h",
+      "toolbar/bookmark_bar_sub_menu_model.cc",
+      "toolbar/bookmark_bar_sub_menu_model.h",
+      "toolbar/brave_app_menu_model.cc",
+      "toolbar/brave_app_menu_model.h",
+      "toolbar/brave_bookmark_context_menu_controller.cc",
+      "toolbar/brave_bookmark_context_menu_controller.h",
+      "toolbar/brave_bookmark_sub_menu_model.cc",
+      "toolbar/brave_bookmark_sub_menu_model.h",
+      "toolbar/brave_recent_tabs_sub_menu_model.h",
+      "webui/brave_rewards/rewards_panel_handler.cc",
+      "webui/brave_rewards/rewards_panel_handler.h",
+      "webui/brave_rewards/rewards_panel_ui.cc",
+      "webui/brave_rewards/rewards_panel_ui.h",
+      "webui/brave_rewards/tip_panel_handler.cc",
+      "webui/brave_rewards/tip_panel_handler.h",
+      "webui/brave_rewards/tip_panel_ui.cc",
+      "webui/brave_rewards/tip_panel_ui.h",
+      "webui/brave_settings_ui.cc",
+      "webui/brave_settings_ui.h",
+      "webui/brave_shields/cookie_list_opt_in_page_handler.cc",
+      "webui/brave_shields/cookie_list_opt_in_page_handler.h",
+      "webui/brave_shields/cookie_list_opt_in_ui.cc",
+      "webui/brave_shields/cookie_list_opt_in_ui.h",
+      "webui/brave_shields/shields_panel_data_handler.cc",
+      "webui/brave_shields/shields_panel_data_handler.h",
+      "webui/brave_shields/shields_panel_handler.cc",
+      "webui/brave_shields/shields_panel_handler.h",
+      "webui/brave_shields/shields_panel_ui.cc",
+      "webui/brave_shields/shields_panel_ui.h",
+      "webui/navigation_bar_data_provider.cc",
+      "webui/navigation_bar_data_provider.h",
+      "webui/new_tab_page/brave_new_tab_message_handler.cc",
+      "webui/new_tab_page/brave_new_tab_message_handler.h",
+      "webui/new_tab_page/brave_new_tab_page_handler.cc",
+      "webui/new_tab_page/brave_new_tab_page_handler.h",
+      "webui/new_tab_page/brave_new_tab_ui.cc",
+      "webui/new_tab_page/brave_new_tab_ui.h",
+      "webui/new_tab_page/brave_new_tab_ui_utils.cc",
+      "webui/new_tab_page/brave_new_tab_ui_utils.h",
+      "webui/new_tab_page/top_sites_message_handler.cc",
+      "webui/new_tab_page/top_sites_message_handler.h",
+      "webui/private_new_tab_page/brave_private_new_tab_page_handler.cc",
+      "webui/private_new_tab_page/brave_private_new_tab_page_handler.h",
+      "webui/private_new_tab_page/brave_private_new_tab_ui.cc",
+      "webui/private_new_tab_page/brave_private_new_tab_ui.h",
+      "webui/settings/brave_adblock_handler.cc",
+      "webui/settings/brave_adblock_handler.h",
+      "webui/settings/brave_appearance_handler.cc",
+      "webui/settings/brave_appearance_handler.h",
+      "webui/settings/brave_import_bulk_data_handler.cc",
+      "webui/settings/brave_import_bulk_data_handler.h",
+      "webui/settings/brave_import_data_handler.cc",
+      "webui/settings/brave_import_data_handler.h",
+      "webui/settings/brave_importer_observer.cc",
+      "webui/settings/brave_importer_observer.h",
+      "webui/settings/brave_privacy_handler.cc",
+      "webui/settings/brave_privacy_handler.h",
+      "webui/settings/brave_search_engines_handler.cc",
+      "webui/settings/brave_search_engines_handler.h",
+      "webui/settings/brave_settings_localized_strings_provider.cc",
+      "webui/settings/brave_settings_localized_strings_provider.h",
+      "webui/settings/brave_site_settings_handler.cc",
+      "webui/settings/brave_site_settings_handler.h",
+      "webui/settings/brave_sync_handler.cc",
+      "webui/settings/brave_sync_handler.h",
+      "webui/settings/brave_wallet_handler.cc",
+      "webui/settings/brave_wallet_handler.h",
+      "webui/settings/default_brave_shields_handler.cc",
+      "webui/settings/default_brave_shields_handler.h",
+      "webui/side_panel/reading_list/brave_reading_list_page_handler.cc",
+      "webui/side_panel/reading_list/brave_reading_list_page_handler.h",
+      "webui/speedreader/speedreader_toolbar_data_handler_impl.cc",
+      "webui/speedreader/speedreader_toolbar_data_handler_impl.h",
+      "webui/speedreader/speedreader_toolbar_ui.cc",
+      "webui/speedreader/speedreader_toolbar_ui.h",
+      "webui/webcompat_reporter/webcompat_reporter_dialog.cc",
+      "webui/webcompat_reporter/webcompat_reporter_dialog.h",
+      "webui/welcome_page/brave_welcome_ui.cc",
+      "webui/welcome_page/brave_welcome_ui.h",
+      "webui/welcome_page/welcome_dom_handler.cc",
+      "webui/welcome_page/welcome_dom_handler.h",
+      "whats_new/pref_names.h",
+      "whats_new/whats_new_util.cc",
+      "whats_new/whats_new_util.h",
+    ]
+
+    deps += [
+      "//base",
+      "//brave/browser/profiles:util",
+      "//brave/common",
+      "//brave/components/constants",
+      "//brave/components/sidebar/browser",
+      "//brave/components/sidebar/common",
+      "//chrome/app:generated_resources",
+      "//chrome/browser/profiles",
+      "//chrome/browser/ui/webui/side_panel/reading_list:mojo_bindings",
+      "//chrome/common:channel_info",
+      "//components/bookmarks/common",
+      "//components/google/core/common",
+      "//components/keyed_service/content",
+      "//components/keyed_service/core",
+      "//components/pref_registry",
+      "//components/prefs",
+      "//components/sessions",
+      "//components/user_prefs",
+      "//content/public/browser",
+      "//content/public/common",
+      "//extensions/buildflags",
+      "//skia",
+      "//third_party/abseil-cpp:absl",
+      "//ui/color:color_headers",
+      "//ui/color:mixers",
+      "//ui/webui/resources/cr_components/searchbox:mojo_bindings",
+      "//url",
+    ]
+
+    if (enable_request_otr) {
+      deps += [
+        "//brave/components/request_otr/common",
+        "//brave/components/request_otr/common/buildflags:buildflags",
+      ]
+    }
+
+    if (enable_pin_shortcut) {
+      sources += [
+        "webui/settings/pin_shortcut_handler.cc",
+        "webui/settings/pin_shortcut_handler.h",
+      ]
+    }
+
+    if (enable_ai_chat) {
+      sources += [
+        "webui/settings/brave_settings_leo_assistant_handler.cc",
+        "webui/settings/brave_settings_leo_assistant_handler.h",
+      ]
+
+      deps += [ "//chrome/browser/favicon" ]
+    }
+
+    if (is_mac) {
+      sources += [
+        "webui/settings/brave_full_disk_access_confirm_dialog_delegate.h",
+        "webui/settings/brave_full_disk_access_confirm_dialog_delegate_mac.mm",
+      ]
+    }
+
+    if (enable_sparkle) {
+      sources += [
+        "webui/settings/brave_relaunch_handler_mac.h",
+        "webui/settings/brave_relaunch_handler_mac.mm",
+      ]
+    }
+
+    if (enable_tor) {
+      sources += [
+        "webui/settings/brave_tor_handler.cc",
+        "webui/settings/brave_tor_handler.h",
+      ]
+
+      deps += [ "//chrome/browser/image_fetcher" ]
+    }
+    if (enable_extensions) {
+      sources += [
+        "webui/settings/brave_extensions_manifest_v2_handler.cc",
+        "webui/settings/brave_extensions_manifest_v2_handler.h",
+        "webui/settings/brave_tor_snowflake_extension_handler.cc",
+        "webui/settings/brave_tor_snowflake_extension_handler.h",
+      ]
+
+      deps += [
+        "//chrome/browser/extensions",
+        "//extensions/browser",
+        "//extensions/common",
+      ]
+    }
+  }
+
+  if (enable_commander) {
+    sources += [
+      "commander/bookmark_command_source.cc",
+      "commander/bookmark_command_source.h",
+      "commander/command_source.cc",
+      "commander/command_source.h",
+      "commander/commander_service.cc",
+      "commander/commander_service.h",
+      "commander/commander_service_factory.cc",
+      "commander/commander_service_factory.h",
+      "commander/commander_service_factory.h",
+      "commander/entity_match.cc",
+      "commander/entity_match.h",
+      "commander/open_url_command_source.cc",
+      "commander/open_url_command_source.h",
+      "commander/ranker.cc",
+      "commander/ranker.h",
+      "commander/simple_command_source.cc",
+      "commander/simple_command_source.h",
+      "commander/tab_command_source.cc",
+      "commander/tab_command_source.h",
+      "commander/window_command_source.cc",
+      "commander/window_command_source.h",
+    ]
+
+    deps += [
+      "//brave/browser/ui/commander:fuzzy_finder",
+      "//brave/components/commander/browser",
+    ]
+  }
+
+  if (toolkit_views) {
+    sources += [
+      "views/bookmarks/bookmark_bar_instructions_view.cc",
+      "views/bookmarks/bookmark_bar_instructions_view.h",
+      "views/bookmarks/brave_bookmark_bar_view.cc",
+      "views/bookmarks/brave_bookmark_bar_view.h",
+      "views/bookmarks/brave_bookmark_context_menu.cc",
+      "views/bookmarks/brave_bookmark_context_menu.h",
+      "views/bookmarks/saved_tab_groups/brave_saved_tab_group_button.cc",
+      "views/bookmarks/saved_tab_groups/brave_saved_tab_group_button.h",
+      "views/brave_first_run_dialog.cc",
+      "views/brave_first_run_dialog.h",
+      "views/brave_layout_provider.cc",
+      "views/brave_layout_provider.h",
+      "views/brave_news/brave_news_bubble_view.cc",
+      "views/brave_news/brave_news_bubble_view.h",
+      "views/brave_news/brave_news_feed_item_view.cc",
+      "views/brave_news/brave_news_feed_item_view.h",
+      "views/brave_news/brave_news_feeds_container_view.cc",
+      "views/brave_news/brave_news_feeds_container_view.h",
+      "views/brave_rewards/tip_panel_bubble_host.cc",
+      "views/brave_rewards/tip_panel_bubble_host.h",
+      "views/brave_shields/cookie_list_opt_in_bubble_host.cc",
+      "views/brave_shields/cookie_list_opt_in_bubble_host.h",
+      "views/brave_tab_search_bubble_host.cc",
+      "views/brave_tab_search_bubble_host.h",
+      "views/commands/default_accelerators_views.cc",
+      "views/crash_report_permission_ask_dialog_view.cc",
+      "views/crash_report_permission_ask_dialog_view.h",
+      "views/dialog_footnote_utils.cc",
+      "views/dialog_footnote_utils.h",
+      "views/download/brave_download_item_view.cc",
+      "views/download/brave_download_item_view.h",
+      "views/frame/brave_browser_frame.cc",
+      "views/frame/brave_browser_frame.h",
+      "views/frame/brave_browser_root_view.cc",
+      "views/frame/brave_browser_root_view.h",
+      "views/frame/brave_browser_view.cc",
+      "views/frame/brave_browser_view.h",
+      "views/frame/brave_browser_view_layout.cc",
+      "views/frame/brave_browser_view_layout.h",
+      "views/frame/brave_contents_layout_manager.cc",
+      "views/frame/brave_contents_layout_manager.h",
+      "views/frame/brave_contents_view_util.cc",
+      "views/frame/brave_contents_view_util.h",
+      "views/frame/brave_non_client_hit_test_helper.cc",
+      "views/frame/brave_non_client_hit_test_helper.h",
+      "views/frame/brave_opaque_browser_frame_view.cc",
+      "views/frame/brave_opaque_browser_frame_view.h",
+      "views/frame/brave_tab_strip_region_view.cc",
+      "views/frame/brave_tab_strip_region_view.h",
+      "views/frame/brave_window_frame_graphic.cc",
+      "views/frame/brave_window_frame_graphic.h",
+      "views/omnibox/brave_omnibox_popup_view_views.cc",
+      "views/omnibox/brave_omnibox_popup_view_views.h",
+      "views/omnibox/brave_omnibox_result_view.cc",
+      "views/omnibox/brave_omnibox_result_view.h",
+      "views/omnibox/brave_omnibox_view_views.cc",
+      "views/omnibox/brave_omnibox_view_views.h",
+      "views/omnibox/brave_rounded_omnibox_results_frame.cc",
+      "views/omnibox/brave_rounded_omnibox_results_frame.h",
+      "views/omnibox/brave_search_conversion_promotion_view.cc",
+      "views/omnibox/brave_search_conversion_promotion_view.h",
+      "views/overlay/brave_back_to_tab_label_button.cc",
+      "views/overlay/brave_back_to_tab_label_button.h",
+      "views/overlay/brave_video_overlay_window_views.cc",
+      "views/overlay/brave_video_overlay_window_views.h",
+      "views/page_action/brave_page_action_icon_container_view.cc",
+      "views/page_action/brave_page_action_icon_container_view.h",
+      "views/rounded_separator.cc",
+      "views/rounded_separator.h",
+      "views/side_panel/bookmarks/brave_bookmarks_side_panel_coordinator.cc",
+      "views/side_panel/bookmarks/brave_bookmarks_side_panel_coordinator.h",
+      "views/side_panel/brave_bookmarks_side_panel_view.cc",
+      "views/side_panel/brave_bookmarks_side_panel_view.h",
+      "views/side_panel/brave_read_later_side_panel_view.cc",
+      "views/side_panel/brave_read_later_side_panel_view.h",
+      "views/side_panel/brave_side_panel.cc",
+      "views/side_panel/brave_side_panel.h",
+      "views/side_panel/brave_side_panel_coordinator.cc",
+      "views/side_panel/brave_side_panel_coordinator.h",
+      "views/side_panel/brave_side_panel_resize_widget.cc",
+      "views/side_panel/brave_side_panel_resize_widget.h",
+      "views/side_panel/brave_side_panel_utils.cc",
+      "views/side_panel/brave_side_panel_view_base.cc",
+      "views/side_panel/brave_side_panel_view_base.h",
+      "views/split_view/split_view_separator.cc",
+      "views/split_view/split_view_separator.h",
+      "views/split_view/split_view_separator_delegate.h",
+      "views/tabs/brave_browser_tab_strip_controller.cc",
+      "views/tabs/brave_browser_tab_strip_controller.h",
+      "views/tabs/brave_compound_tab_container.cc",
+      "views/tabs/brave_compound_tab_container.h",
+      "views/tabs/brave_tab.cc",
+      "views/tabs/brave_tab.h",
+      "views/tabs/brave_tab_container.cc",
+      "views/tabs/brave_tab_container.h",
+      "views/tabs/brave_tab_context_menu_contents.cc",
+      "views/tabs/brave_tab_context_menu_contents.h",
+      "views/tabs/brave_tab_group_header.cc",
+      "views/tabs/brave_tab_group_header.h",
+      "views/tabs/brave_tab_group_highlight.cc",
+      "views/tabs/brave_tab_group_highlight.h",
+      "views/tabs/brave_tab_group_underline.cc",
+      "views/tabs/brave_tab_group_underline.h",
+      "views/tabs/brave_tab_hover_card_controller.cc",
+      "views/tabs/brave_tab_hover_card_controller.h",
+      "views/tabs/brave_tab_strip.cc",
+      "views/tabs/brave_tab_strip.h",
+      "views/tabs/brave_tab_strip_layout_helper.cc",
+      "views/tabs/brave_tab_strip_layout_helper.h",
+      "views/tabs/shared_pinned_tab_dummy_view_views.cc",
+      "views/tabs/shared_pinned_tab_dummy_view_views.h",
+      "views/tabs/switches.h",
+      "views/tabs/tab_drag_controller.cc",
+      "views/tabs/tab_drag_controller.h",
+      "views/tabs/vertical_tab_utils.cc",
+      "views/tabs/vertical_tab_utils.h",
+      "views/toolbar/bookmark_button.cc",
+      "views/toolbar/bookmark_button.h",
+      "views/toolbar/brave_app_menu.cc",
+      "views/toolbar/brave_app_menu.h",
+      "views/view_shadow.cc",
+      "views/view_shadow.h",
+      "views/window_closing_confirm_dialog_view.cc",
+      "views/window_closing_confirm_dialog_view.h",
+    ]
+
+    deps += [
+      "//chrome/browser/devtools",
+      "//components/bookmarks/browser",
+    ]
+
+    if (enable_brave_vpn) {
+      if (is_win) {
+        sources += [
+          "views/brave_vpn/brave_vpn_dns_settings_notificiation_dialog_view.cc",
+          "views/brave_vpn/brave_vpn_dns_settings_notificiation_dialog_view.h",
+          "views/brave_vpn/brave_vpn_fallback_dialog_view.cc",
+          "views/brave_vpn/brave_vpn_fallback_dialog_view.h",
+          "webui/settings/brave_settings_secure_dns_handler.cc",
+          "webui/settings/brave_settings_secure_dns_handler.h",
+          "webui/settings/brave_vpn/brave_vpn_handler.cc",
+          "webui/settings/brave_vpn/brave_vpn_handler.h",
+        ]
+
+        deps += [ "//brave/browser/brave_vpn/win:wireguard_utils" ]
+      }
+    }
+    if (enable_ai_chat) {
+      sources +=
+          [ "views/side_panel/ai_chat/ai_chat_side_panel_utils_views.cc" ]
+    }
+    if (use_aura) {
+      sources += [
+        "views/renderer_context_menu/brave_render_view_context_menu_views.cc",
+        "views/renderer_context_menu/brave_render_view_context_menu_views.h",
+      ]
+    }
+
+    if (is_linux && use_dbus) {
+      sources += [
+        "views/brave_dark_mode_manager_linux.cc",
+        "views/brave_dark_mode_manager_linux.h",
+      ]
+      deps += [ "//ui/linux:linux_ui_factory" ]
+    }
+
+    if (enable_sparkle) {
+      sources += [
+        "views/update_recommended_message_box_mac.h",
+        "views/update_recommended_message_box_mac.mm",
+      ]
+    }
+
+    if (is_win) {
+      sources += [
+        "views/frame/brave_browser_frame_view_win.cc",
+        "views/frame/brave_browser_frame_view_win.h",
+      ]
+
+      deps += [ "//chrome/browser:titlebar_config" ]
+    }
+
+    if (is_linux) {
+      sources += [
+        "views/frame/brave_browser_frame_view_linux_native.cc",
+        "views/frame/brave_browser_frame_view_linux_native.h",
+      ]
+    }
+
+    if (is_mac) {
+      sources += [
+        "views/commands/default_accelerators_mac.h",
+        "views/commands/default_accelerators_mac.mm",
+        "views/frame/brave_browser_frame_mac.h",
+        "views/frame/brave_browser_frame_mac.mm",
+        "views/frame/brave_browser_non_client_frame_view_mac.h",
+        "views/frame/brave_browser_non_client_frame_view_mac.mm",
+      ]
+    }
+  }
+
+  if (is_win || is_mac || is_linux) {
+    sources += [
+      "views/profiles/brave_incognito_menu_view.cc",
+      "views/profiles/brave_incognito_menu_view.h",
+      "views/profiles/brave_profile_menu_view.cc",
+      "views/profiles/brave_profile_menu_view.h",
+    ]
+  }
+
+  if (is_win || is_mac || is_linux) {
+    sources += [
+      "geolocation/brave_geolocation_permission_tab_helper.cc",
+      "geolocation/brave_geolocation_permission_tab_helper.h",
+      "geolocation/geolocation_utils.h",
+    ]
+
+    deps += [ "//brave/components/brave_geolocation_permission/common:brave_geolocation_permission" ]
+
+    if (is_win) {
+      sources += [ "geolocation/geolocation_utils_win.cc" ]
+    }
+
+    if (is_mac) {
+      sources += [ "geolocation/geolocation_utils_mac.mm" ]
+      frameworks = [ "CoreLocation.framework" ]
+    }
+
+    if (is_linux) {
+      sources += [ "geolocation/geolocation_utils_linux.cc" ]
+    }
+  }
+
+  # brave's obsolete infobar is only used on Windows and Mac now.
+  if (is_win || is_mac) {
+    sources += [
+      "startup/brave_obsolete_system_infobar_delegate.cc",
+      "startup/brave_obsolete_system_infobar_delegate.h",
+    ]
+
+    if (toolkit_views) {
+      sources += [
+        "views/obsolete_system_confirm_dialog_view.cc",
+        "views/obsolete_system_confirm_dialog_view.h",
+      ]
+    }
+  }
+
+  deps += [
+    "//base",
+    "//brave/app:command_ids",
+    "//brave/app/vector_icons:vector_icons",
+    "//brave/browser:browser_process",
+    "//brave/browser:sparkle_buildflags",
+    "//brave/browser/brave_rewards:util",
+    "//brave/browser/ethereum_remote_client/buildflags",
+    "//brave/browser/profiles",
+    "//brave/browser/shell_integrations/buildflags",
+    "//brave/browser/themes",
+    "//brave/browser/ui/brave_ads",
+    "//brave/browser/ui/brave_tooltips",
+
+    # //chrome/browser/ui depends on //brave/browser/ui, add this target here
+    # to pull in dependencies needed for the overwrite codes in chromium_src.
+    "//brave/chromium_src/chrome/browser/ui",
+    "//brave/common",
+    "//brave/components/ai_chat/core/common/buildflags",
+    "//brave/components/brave_adblock_ui:generated_resources",
+    "//brave/components/brave_adblock_ui/adblock_internals:generated_resources",
+    "//brave/components/brave_ads/browser",
+    "//brave/components/brave_ads/core",
+    "//brave/components/brave_federated",
+    "//brave/components/brave_federated/public/interfaces",
+    "//brave/components/brave_news/common",
+    "//brave/components/brave_perf_predictor/common",
+    "//brave/components/brave_rewards/browser",
+    "//brave/components/brave_rewards/common",
+    "//brave/components/brave_rewards/common/mojom",
+    "//brave/components/brave_rewards/common/mojom:webui",
+    "//brave/components/brave_rewards/core:headers",
+    "//brave/components/brave_rewards/resources",
+    "//brave/components/brave_rewards/resources:internals_generated_resources",
+    "//brave/components/brave_rewards/resources:page_generated_resources",
+    "//brave/components/brave_search/common",
+    "//brave/components/brave_search_conversion",
+    "//brave/components/brave_shields/content/browser",
+    "//brave/components/brave_shields/core/common",
+    "//brave/components/brave_shields/core/common:mojom",
+    "//brave/components/brave_sync:crypto",
+    "//brave/components/brave_sync:prefs",
+    "//brave/components/brave_sync:time_limited_codes",
+    "//brave/components/brave_vpn/common/buildflags",
+    "//brave/components/brave_wallet/browser",
+    "//brave/components/brave_wallet/browser:constants",
+    "//brave/components/brave_wallet/browser:pref_names",
+    "//brave/components/brave_wallet/browser:utils",
+    "//brave/components/brave_wallet_ui/line_chart:line_chart_display_generated",
+    "//brave/components/brave_wallet_ui/market:market_display_generated",
+    "//brave/components/brave_wallet_ui/nft:nft_display_generated",
+    "//brave/components/brave_wallet_ui/page:brave_wallet_page_generated",
+    "//brave/components/brave_wayback_machine/buildflags",
+    "//brave/components/constants",
+    "//brave/components/cosmetic_filters/resources/data:generated_resources",
+    "//brave/components/de_amp/common",
+    "//brave/components/debounce/core/browser",
+    "//brave/components/debounce/core/common",
+    "//brave/components/decentralized_dns/core",
+    "//brave/components/google_sign_in_permission",
+    "//brave/components/infobars/core",
+    "//brave/components/ipfs/buildflags",
+    "//brave/components/l10n/common",
+    "//brave/components/misc_metrics",
+    "//brave/components/ntp_background_images/browser",
+    "//brave/components/ntp_background_images/common",
+    "//brave/components/ntp_widget_utils/browser",
+    "//brave/components/p3a",
+    "//brave/components/p3a:buildflags",
+    "//brave/components/p3a_utils",
+    "//brave/components/playlist/common/buildflags",
+    "//brave/components/query_filter",
+    "//brave/components/resources:static_resources",
+    "//brave/components/skus/browser",
+    "//brave/components/skus/browser/resources:generated_resources",
+    "//brave/components/skus/common",
+    "//brave/components/skus/common:mojom",
+    "//brave/components/text_recognition/common/buildflags",
+    "//brave/components/time_period_storage",
+    "//brave/components/tor/buildflags",
+    "//brave/components/url_sanitizer/browser",
+    "//brave/components/vector_icons",
+    "//brave/components/webui",
+    "//chrome/app:command_ids",
+    "//chrome/app/vector_icons:vector_icons",
+    "//chrome/browser:browser_process",
+    "//chrome/browser:theme_properties",
+    "//chrome/browser/bitmap_fetcher",
+    "//chrome/browser/media/router:media_router_feature",
+    "//chrome/browser/profiles:profile",
+    "//chrome/browser/ui/color:color_headers",
+    "//chrome/browser/ui/color:mixers",
+    "//chrome/browser/ui/webui",
+    "//chrome/browser/ui/webui/top_chrome",
+    "//chrome/common",
+    "//components/bookmarks/common",
+    "//components/content_settings/browser",
+    "//components/country_codes",
+    "//components/favicon/content",
+    "//components/favicon/core",
+    "//components/flags_ui",
+    "//components/gcm_driver:gcm_buildflags",
+    "//components/image_fetcher/core",
+    "//components/infobars/content",
+    "//components/language/core/browser",
+    "//components/omnibox/browser:vector_icons",
+    "//components/optimization_guide/core:features",
+    "//components/optimization_guide/optimization_guide_internals/webui:url_constants",
+    "//components/prefs",
+    "//components/qr_code_generator:bitmap_generator",
+    "//components/resources:components_resources_grit",
+    "//components/search_engines",
+    "//components/sessions",
+    "//components/strings:components_strings",
+    "//components/tab_groups",
+    "//components/update_client",
+    "//components/user_prefs",
+    "//content/public/browser",
+    "//content/public/common",
+    "//mojo/public/cpp/bindings",
+    "//services/network/public/cpp",
+    "//services/resource_coordinator/public/cpp/memory_instrumentation:browser",
+    "//skia",
+    "//third_party/abseil-cpp:absl",
+    "//ui/accessibility",
+    "//ui/base",
+    "//ui/base/mojom",
+    "//ui/gfx",
+    "//ui/resources",
+    "//ui/shell_dialogs",
+    "//ui/web_dialogs",
+    "//ui/webui",
+    "//url",
+  ]
+
+  if (enable_brave_vpn) {
+    deps += [
+      "//brave/browser/brave_vpn",
+      "//brave/components/brave_vpn/browser",
+      "//brave/components/brave_vpn/browser/connection:api",
+      "//brave/components/brave_vpn/common",
+    ]
+    if (is_win) {
+      deps += [
+        "//brave/components/brave_vpn/common/win",
+        "//brave/components/brave_vpn/common/wireguard",
+      ]
+    }
+  }
+
+  if (is_linux) {
+    sources += [
+      "views/brave_views_delegate_linux.cc",
+      "views/brave_views_delegate_linux.h",
+    ]
+
+    deps += [ "//chrome/app/theme:chrome_unscaled_resources_grit" ]
+  }
+
+  if (toolkit_views) {
+    sources += [
+      "views/infobars/brave_confirm_infobar.cc",
+      "views/infobars/brave_confirm_infobar.h",
+      "views/infobars/brave_global_infobar_manager.cc",
+      "views/infobars/brave_global_infobar_manager.h",
+      "views/infobars/brave_infobar_container_view.cc",
+      "views/infobars/brave_infobar_container_view.h",
+      "views/infobars/brave_sync_account_deleted_infobar.cc",
+      "views/infobars/brave_sync_account_deleted_infobar.h",
+      "views/infobars/custom_styled_label.cc",
+      "views/infobars/custom_styled_label.h",
+      "views/infobars/web_discovery_infobar_content_view.cc",
+      "views/infobars/web_discovery_infobar_content_view.h",
+      "views/infobars/web_discovery_infobar_view.cc",
+      "views/infobars/web_discovery_infobar_view.h",
+    ]
+
+    deps += [
+      "//brave/browser/ui/views/brave_ads",
+      "//brave/browser/ui/views/brave_tooltips",
+      "//ui/views/controls/webview",
+    ]
+  }
+
+  if (enable_text_recognition) {
+    sources += [
+      "views/text_recognition_dialog_tracker.cc",
+      "views/text_recognition_dialog_tracker.h",
+      "views/text_recognition_dialog_view.cc",
+      "views/text_recognition_dialog_view.h",
+    ]
+
+    deps += [ "//brave/components/text_recognition/browser" ]
+  }
+
+  if (!is_android && !is_ios) {
+    deps += [
+      "//brave/app/theme:brave_theme_resources",
+      "//brave/app/theme:brave_unscaled_resources",
+      "//brave/components/brave_webtorrent:static_resources",
+      "//brave/components/webcompat_reporter/browser",
+      "//brave/components/webcompat_reporter/ui:generated_resources",
+    ]
+  }
+
+  # This is no longer compiled into Chromium on Android, but we still
+  # need it
+  if (is_android) {
+    sources += [
+      "//chrome/browser/ui/webui/favicon_source.cc",
+      "//chrome/browser/ui/webui/favicon_source.h",
+    ]
+
+    deps += [
+      "//chrome/browser/favicon",
+      "//components/favicon/core",
+      "//components/favicon_base",
+      "//components/history/core/browser",
+      "//net",
+      "//ui/native_theme",
+      "//url",
+    ]
+  }
+
+  if (enable_brave_wayback_machine) {
+    deps += [ "//brave/components/brave_wayback_machine" ]
+
+    if (toolkit_views) {
+      sources += [
+        "views/page_action/wayback_machine_action_icon_view.cc",
+        "views/page_action/wayback_machine_action_icon_view.h",
+        "views/page_action/wayback_machine_state_manager.cc",
+        "views/page_action/wayback_machine_state_manager.h",
+        "views/wayback_machine_bubble_view.cc",
+        "views/wayback_machine_bubble_view.h",
+      ]
+    }
+  }
+
+  if (enable_ipfs) {
+    deps += [
+      "//brave/components/ipfs",
+      "//components/component_updater",
+    ]
+
+    if (enable_ipfs_internals_webui) {
+      deps += [ "//brave/components/ipfs_ui:generated_resources" ]
+    }
+  }
+
+  if (enable_speedreader && !is_android) {
+    deps += [ "//brave/components/speedreader" ]
+
+    sources += [
+      "speedreader/speedreader_bubble_view.h",
+      "views/speedreader/reader_mode_bubble.cc",
+      "views/speedreader/reader_mode_bubble.h",
+      "views/speedreader/reader_mode_toolbar_view.cc",
+      "views/speedreader/reader_mode_toolbar_view.h",
+      "views/speedreader/speedreader_icon_view.cc",
+      "views/speedreader/speedreader_icon_view.h",
+    ]
+  }
+
+  if (enable_request_otr) {
+    deps += [
+      "//brave/components/request_otr/browser",
+      "//brave/components/request_otr/common",
+    ]
+  }
+
+  if (toolkit_views) {
+    deps += [
+      "//brave/components/sidebar/browser",
+      "//chrome/app:generated_resources",
+      "//chrome/browser/ui/views",
+      "//components/favicon_base",
+    ]
+
+    sources += [
+      "views/sidebar/sidebar_add_item_bubble_delegate_view.cc",
+      "views/sidebar/sidebar_add_item_bubble_delegate_view.h",
+      "views/sidebar/sidebar_button_view.cc",
+      "views/sidebar/sidebar_button_view.h",
+      "views/sidebar/sidebar_container_view.cc",
+      "views/sidebar/sidebar_container_view.h",
+      "views/sidebar/sidebar_control_view.cc",
+      "views/sidebar/sidebar_control_view.h",
+      "views/sidebar/sidebar_edit_item_bubble_delegate_view.cc",
+      "views/sidebar/sidebar_edit_item_bubble_delegate_view.h",
+      "views/sidebar/sidebar_item_add_button.cc",
+      "views/sidebar/sidebar_item_add_button.h",
+      "views/sidebar/sidebar_item_added_feedback_bubble.cc",
+      "views/sidebar/sidebar_item_added_feedback_bubble.h",
+      "views/sidebar/sidebar_item_drag_context.cc",
+      "views/sidebar/sidebar_item_drag_context.h",
+      "views/sidebar/sidebar_item_view.cc",
+      "views/sidebar/sidebar_item_view.h",
+      "views/sidebar/sidebar_items_contents_view.cc",
+      "views/sidebar/sidebar_items_contents_view.h",
+      "views/sidebar/sidebar_items_scroll_view.cc",
+      "views/sidebar/sidebar_items_scroll_view.h",
+      "views/sidebar/sidebar_show_options_event_detect_widget.cc",
+      "views/sidebar/sidebar_show_options_event_detect_widget.h",
+    ]
+  }
+
+  if (!is_android) {
+    deps += [
+      "//brave/app:brave_generated_resources_grit",
+      "//brave/browser/brave_wallet",
+      "//brave/browser/resources/settings:resources",
+      "//brave/browser/ui/color:leo_colors",
+      "//brave/common/importer",
+      "//brave/components/brave_adaptive_captcha",
+      "//brave/components/brave_new_tab_ui:generated_resources",
+      "//brave/components/brave_new_tab_ui:mojom",
+      "//brave/components/brave_news/browser",
+      "//brave/components/brave_private_new_tab_ui/common",
+      "//brave/components/brave_private_new_tab_ui/common:mojom",
+      "//brave/components/brave_private_new_tab_ui/resources/page:generated_resources",
+      "//brave/components/brave_rewards/browser",
+      "//brave/components/brave_rewards/resources/rewards_panel:brave_rewards_panel_generated",
+      "//brave/components/brave_rewards/resources/tip_panel:tip_panel_generated",
+      "//brave/components/brave_shields/resources/cookie_list_opt_in:cookie_list_opt_in_generated",
+      "//brave/components/brave_shields/resources/panel:brave_shields_panel_generated",
+      "//brave/components/brave_sync",
+      "//brave/components/brave_sync:sync_service_impl_helper",
+      "//brave/components/brave_wallet/common",
+      "//brave/components/brave_welcome/common",
+      "//brave/components/brave_welcome_ui:generated_resources",
+      "//brave/components/commands/common",
+      "//brave/components/speedreader/common",
+      "//brave/components/speedreader/common:mojom",
+      "//brave/components/speedreader/resources/panel:generated_resources",
+      "//brave/components/version_info",
+      "//chrome/app:branded_strings",
+      "//chrome/browser/ui/tabs:tab_enums",
+      "//components/sync_device_info",
+      "//mojo/public/cpp/bindings",
+      "//third_party/blink/public/common",
+    ]
+  }
+
+  if (enable_ai_chat) {
+    deps += [
+      "//brave/components/ai_chat/content/browser",
+      "//brave/components/ai_chat/core/browser",
+      "//brave/components/ai_chat/core/common",
+      "//brave/components/ai_chat/core/common/mojom",
+      "//brave/components/ai_chat/resources/page:generated_resources",
+    ]
+  }
+
+  if (enable_extensions && toolkit_views) {
+    sources += [
+      "toolbar/brave_location_bar_model_delegate.cc",
+      "toolbar/brave_location_bar_model_delegate.h",
+      "views/brave_actions/brave_actions_container.cc",
+      "views/brave_actions/brave_actions_container.h",
+      "views/brave_actions/brave_rewards_action_view.cc",
+      "views/brave_actions/brave_rewards_action_view.h",
+      "views/brave_actions/brave_shields_action_view.cc",
+      "views/brave_actions/brave_shields_action_view.h",
+      "views/brave_help_bubble/brave_help_bubble_delegate_view.cc",
+      "views/brave_help_bubble/brave_help_bubble_delegate_view.h",
+      "views/brave_help_bubble/brave_help_bubble_host_view.cc",
+      "views/brave_help_bubble/brave_help_bubble_host_view.h",
+      "views/frame/vertical_tab_strip_region_view.cc",
+      "views/frame/vertical_tab_strip_region_view.h",
+      "views/frame/vertical_tab_strip_root_view.cc",
+      "views/frame/vertical_tab_strip_root_view.h",
+      "views/frame/vertical_tab_strip_widget_delegate_view.cc",
+      "views/frame/vertical_tab_strip_widget_delegate_view.h",
+      "views/location_bar/brave_location_bar_view.cc",
+      "views/location_bar/brave_location_bar_view.h",
+      "views/location_bar/brave_news_location_view.cc",
+      "views/location_bar/brave_news_location_view.h",
+      "views/location_bar/brave_star_view.cc",
+      "views/location_bar/brave_star_view.h",
+      "views/profiles/brave_avatar_toolbar_button.cc",
+      "views/profiles/brave_avatar_toolbar_button.h",
+      "views/profiles/brave_avatar_toolbar_button_delegate.cc",
+      "views/profiles/brave_avatar_toolbar_button_delegate.h",
+      "views/tabs/brave_new_tab_button.cc",
+      "views/tabs/brave_new_tab_button.h",
+      "views/tabs/brave_tab_search_button.cc",
+      "views/tabs/brave_tab_search_button.h",
+      "views/toolbar/brave_toolbar_view.cc",
+      "views/toolbar/brave_toolbar_view.h",
+    ]
+
+    if (is_mac) {
+      sources += [ "views/frame/vertical_tab_strip_region_view_mac.mm" ]
+    }
+
+    if (enable_extensions) {
+      sources += [
+        "webui/settings/brave_default_extensions_handler.cc",
+        "webui/settings/brave_default_extensions_handler.h",
+      ]
+
+      deps += [ "//third_party/widevine/cdm:buildflags" ]
+
+      if (enable_widevine) {
+        deps += [ "//brave/browser/widevine" ]
+      }
+    }
+
+    if (enable_tor) {
+      sources += [
+        "views/location_bar/onion_location_view.cc",
+        "views/location_bar/onion_location_view.h",
+      ]
+
+      deps += [
+        "//brave/components/tor",
+        "//brave/components/tor:pref_names",
+        "//brave/components/tor/resources",
+      ]
+    }
+
+    if (enable_ipfs) {
+      sources += [
+        "views/location_bar/ipfs_location_view.cc",
+        "views/location_bar/ipfs_location_view.h",
+      ]
+    }
+
+    deps += [
+      "//brave/browser/extensions",
+      "//brave/components/brave_extension:generated_resources",
+      "//brave/components/brave_extension:static_resources",
+      "//brave/components/decentralized_dns/content",
+      "//brave/components/resources:static_resources",
+      "//brave/components/resources:strings_grit",
+      "//chrome/browser/extensions",
+      "//components/sessions",
+      "//extensions/browser",
+      "//extensions/common:common_constants",
+      "//ui/base/dragdrop:types",
+    ]
+  }
+
+  if (enable_custom_background) {
+    deps += [ "//brave/components/ntp_background_images/browser" ]
+  }
+
+  if (enable_brave_vpn && !is_android) {
+    sources += [
+      "toolbar/brave_vpn_menu_model.cc",
+      "toolbar/brave_vpn_menu_model.h",
+      "webui/brave_vpn/brave_vpn_localized_string_provider.cc",
+      "webui/brave_vpn/brave_vpn_localized_string_provider.h",
+      "webui/brave_vpn/vpn_panel_handler.cc",
+      "webui/brave_vpn/vpn_panel_handler.h",
+      "webui/brave_vpn/vpn_panel_ui.cc",
+      "webui/brave_vpn/vpn_panel_ui.h",
+    ]
+    deps += [
+      "//brave/components/brave_vpn/common/mojom",
+      "//brave/components/brave_vpn/resources:panel_resources",
+      "//mojo/public/cpp/bindings",
+      "//ui/webui:webui",
+    ]
+
+    if (toolkit_views) {
+      sources += [
+        "views/toolbar/brave_vpn_button.cc",
+        "views/toolbar/brave_vpn_button.h",
+        "views/toolbar/brave_vpn_panel_controller.cc",
+        "views/toolbar/brave_vpn_panel_controller.h",
+        "views/toolbar/brave_vpn_status_label.cc",
+        "views/toolbar/brave_vpn_status_label.h",
+        "views/toolbar/brave_vpn_toggle_button.cc",
+        "views/toolbar/brave_vpn_toggle_button.h",
+      ]
+    }
+  }
+
+  if (is_win && is_official_build) {
+    sources += [ "//chrome/browser/ui/webui/help/version_updater_win.cc" ]
+    deps += [ "//google_update" ]
+  }
+
+  if (enable_tor) {
+    sources += [
+      "webui/tor_internals_ui.cc",
+      "webui/tor_internals_ui.h",
+    ]
+
+    deps += [ "//brave/components/tor/resources:internals_generated_resources" ]
+  }
+
+  if (!is_android) {
+    sources += [
+      "brave_rewards/rewards_panel_coordinator.cc",
+      "brave_rewards/rewards_panel_coordinator.h",
+      "brave_rewards/tip_panel_coordinator.cc",
+      "brave_rewards/tip_panel_coordinator.h",
+      "commands/accelerator_service.cc",
+      "commands/accelerator_service.h",
+      "commands/accelerator_service_factory.cc",
+      "commands/accelerator_service_factory.h",
+      "commands/default_accelerators.h",
+      "views/permission_bubble/brave_wallet_permission_prompt_impl.cc",
+      "views/permission_bubble/brave_wallet_permission_prompt_impl.h",
+      "views/toolbar/wallet_button.cc",
+      "views/toolbar/wallet_button.h",
+      "views/toolbar/wallet_button_notification_source.cc",
+      "views/toolbar/wallet_button_notification_source.h",
+      "views/wallet_bubble_focus_observer.cc",
+      "views/wallet_bubble_focus_observer.h",
+      "wallet_bubble_manager_delegate_impl.cc",
+      "wallet_bubble_manager_delegate_impl.h",
+      "webui/brave_news_internals/brave_news_internals_ui.cc",
+      "webui/brave_news_internals/brave_news_internals_ui.h",
+      "webui/brave_wallet/ledger/ledger_ui.cc",
+      "webui/brave_wallet/ledger/ledger_ui.h",
+      "webui/brave_wallet/page_handler/wallet_page_handler.cc",
+      "webui/brave_wallet/page_handler/wallet_page_handler.h",
+      "webui/brave_wallet/panel_handler/wallet_panel_handler.cc",
+      "webui/brave_wallet/panel_handler/wallet_panel_handler.h",
+      "webui/brave_wallet/trezor/trezor_ui.cc",
+      "webui/brave_wallet/trezor/trezor_ui.h",
+      "webui/brave_wallet/wallet_common_ui.cc",
+      "webui/brave_wallet/wallet_common_ui.h",
+      "webui/brave_wallet/wallet_page_ui.cc",
+      "webui/brave_wallet/wallet_page_ui.h",
+      "webui/brave_wallet/wallet_panel_ui.cc",
+      "webui/brave_wallet/wallet_panel_ui.h",
+    ]
+    deps += [
+      "//brave/browser/brave_wallet:tab_helper",
+      "//brave/browser/resources/settings/shortcuts_page:generated_resources",
+      "//brave/browser/ui/brave_wallet",
+      "//brave/browser/ui/webui/brave_wallet/common_handler",
+      "//brave/components/brave_news/browser",
+      "//brave/components/brave_news/browser/resources:generated_resources",
+      "//brave/components/brave_wallet/browser:permission_utils",
+      "//brave/components/brave_wallet/common",
+      "//brave/components/brave_wallet/common:mojom",
+      "//brave/components/brave_wallet_ui:resources",
+      "//brave/components/brave_wallet_ui/ledger:ledger_bridge_generated",
+      "//brave/components/brave_wallet_ui/panel:brave_wallet_panel_generated",
+      "//brave/components/brave_wallet_ui/trezor:trezor_bridge_generated",
+      "//brave/components/commands/browser",
+      "//brave/components/resources:strings_grit",
+      "//components/permissions",
+      "//components/pref_registry",
+      "//mojo/public/cpp/bindings",
+    ]
+  }
+  if (is_android) {
+    sources += [
+      "webui/brave_wallet/android/android_wallet_page_handler.cc",
+      "webui/brave_wallet/android/android_wallet_page_handler.h",
+      "webui/brave_wallet/android/android_wallet_page_ui.cc",
+      "webui/brave_wallet/android/android_wallet_page_ui.h",
+      "webui/brave_wallet/common_handler/wallet_handler.cc",
+      "webui/brave_wallet/common_handler/wallet_handler.h",
+      "webui/brave_wallet/page_handler/wallet_page_handler.cc",
+      "webui/brave_wallet/page_handler/wallet_page_handler.h",
+      "webui/brave_wallet/wallet_common_ui.cc",
+      "webui/brave_wallet/wallet_common_ui.h",
+    ]
+    deps += [
+      "//brave/browser/brave_wallet",
+      "//brave/browser/ui/webui/brave_wallet/common_handler",
+      "//brave/components/brave_wallet/browser:hd_keyring",
+      "//brave/components/brave_wallet/common",
+      "//brave/components/brave_wallet/common:mojom",
+      "//brave/components/brave_wallet_ui:resources",
+      "//brave/components/brave_wallet_ui/page/screens/android-buy/android:brave_wallet_fund_wallet_page_generated",
+      "//brave/components/brave_wallet_ui/page/screens/fund-wallet/android:brave_wallet_deposit_page_generated",
+      "//brave/components/brave_wallet_ui/page/screens/send/android:brave_wallet_send_page_generated",
+      "//brave/components/brave_wallet_ui/page/screens/swap/android:brave_wallet_swap_page_generated",
+    ]
+  }
+
+  if (ethereum_remote_client_enabled && !is_android) {
+    sources += [
+      "webui/ethereum_remote_client/ethereum_remote_client_ui.cc",
+      "webui/ethereum_remote_client/ethereum_remote_client_ui.h",
+    ]
+    deps += [
+      "//brave/browser/ethereum_remote_client",
+      "//brave/browser/ui/webui/ethereum_remote_client:ethereum_remote_client_page_generated",
+    ]
+  }
+
+  if (enable_playlist_webui) {
+    sources += [
+      "playlist/playlist_dialogs.cc",
+      "playlist/playlist_dialogs.h",
+      "views/playlist/playlist_action_dialogs.cc",
+      "views/playlist/playlist_action_dialogs.h",
+      "views/playlist/playlist_action_icon_view.cc",
+      "views/playlist/playlist_action_icon_view.h",
+      "views/playlist/playlist_add_bubble_view.cc",
+      "views/playlist/playlist_add_bubble_view.h",
+      "views/playlist/playlist_bubble_view.cc",
+      "views/playlist/playlist_bubble_view.h",
+      "views/playlist/playlist_bubbles_controller.cc",
+      "views/playlist/playlist_bubbles_controller.h",
+      "views/playlist/playlist_edit_bubble_view.cc",
+      "views/playlist/playlist_edit_bubble_view.h",
+      "views/playlist/selectable_list_view.cc",
+      "views/playlist/selectable_list_view.h",
+      "views/playlist/thumbnail_provider.cc",
+      "views/playlist/thumbnail_provider.h",
+      "views/playlist/thumbnail_view.cc",
+      "views/playlist/thumbnail_view.h",
+      "views/side_panel/playlist/playlist_contents_wrapper.cc",
+      "views/side_panel/playlist/playlist_contents_wrapper.h",
+      "views/side_panel/playlist/playlist_side_panel_coordinator.cc",
+      "views/side_panel/playlist/playlist_side_panel_coordinator.h",
+      "views/side_panel/playlist/playlist_side_panel_web_view.cc",
+      "views/side_panel/playlist/playlist_side_panel_web_view.h",
+      "webui/playlist_ui.cc",
+      "webui/playlist_ui.h",
+    ]
+    deps += [
+      "//brave/components/playlist/browser",
+      "//brave/components/playlist/browser/resources:generated_resources",
+      "//components/user_prefs",
+    ]
+  }
+
+  if (toolkit_views) {
+    deps += [
+      "//components/constrained_window",
+      "//ui/events",
+      "//ui/views",
+    ]
+  }
+
+  if (enable_brave_player) {
+    sources += [
+      "webui/brave_player_ui.cc",
+      "webui/brave_player_ui.h",
+    ]
+    if (toolkit_views) {
+      sources += [
+        "views/brave_player/brave_player_action_icon_view.cc",
+        "views/brave_player/brave_player_action_icon_view.h",
+      ]
+    }
+    deps += [
+      "//brave/components/brave_player/browser/resources:generated_resources",
+      "//brave/components/brave_player/common",
+    ]
+  }
+}
+
+source_set("unit_tests") {
+  if (!is_android) {
+    testonly = true
+    sources = []
+    deps = []
+
+    if (enable_brave_vpn) {
+      sources += [ "views/toolbar/brave_vpn_button_unittest.cc" ]
+      deps += [
+        "//base",
+        "//brave/components/brave_vpn/browser",
+        "//brave/components/brave_vpn/browser/connection:api",
+        "//brave/components/brave_vpn/browser/connection/ikev2:sim",
+        "//brave/components/skus/browser",
+        "//chrome/test:test_support",
+        "//skia",
+        "//testing/gtest",
+        "//third_party/abseil-cpp:absl",
+      ]
+    }
+  }
+}
+
+source_set("browser_tests") {
+  if (!is_android) {
+    testonly = true
+    defines = [ "HAS_OUT_OF_PROC_TEST_RUNNER" ]
+
+    sources = [
+      "brave_browser_browsertest.cc",
+      "window_closing_confirm_browsertest.cc",
+    ]
+
+    deps = [
+      "//brave/app:command_ids",
+      "//brave/components/constants",
+      "//chrome/browser",
+      "//chrome/browser/devtools:test_support",
+      "//chrome/browser/profiles:profile",
+      "//chrome/browser/ui",
+      "//chrome/test:test_support",
+      "//chrome/test:test_support_ui",
+      "//components/javascript_dialogs",
+      "//components/optimization_guide/core:features",
+      "//components/optimization_guide/optimization_guide_internals/webui:url_constants",
+      "//components/prefs",
+      "//content/test:test_support",
+    ]
+
+    if (enable_text_recognition) {
+      sources += [ "text_recognition_browsertest.cc" ]
+    }
+  }
+}

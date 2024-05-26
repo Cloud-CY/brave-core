@@ -1,0 +1,12 @@
+diff --git a/ios/chrome/browser/flags/about_flags.mm b/ios/chrome/browser/flags/about_flags.mm
+index 3381f3bf9e7d651405790f08d1a9841033650a26..39e7c5425616d8c297ef7189afcfc404d4980822 100644
+--- a/ios/chrome/browser/flags/about_flags.mm
++++ b/ios/chrome/browser/flags/about_flags.mm
+@@ -691,6 +691,7 @@ const FeatureEntry::FeatureVariation kModernTabStripVariations[] = {
+ //
+ // When adding a new choice, add it to the end of the list.
+ const flags_ui::FeatureEntry kFeatureEntries[] = {
++    BRAVE_ABOUT_FLAGS_FEATURE_ENTRIES
+     {"in-product-help-demo-mode-choice",
+      flag_descriptions::kInProductHelpDemoModeName,
+      flag_descriptions::kInProductHelpDemoModeDescription, flags_ui::kOsIos,

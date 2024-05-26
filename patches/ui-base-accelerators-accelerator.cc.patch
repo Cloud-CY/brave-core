@@ -1,0 +1,12 @@
+diff --git a/ui/base/accelerators/accelerator.cc b/ui/base/accelerators/accelerator.cc
+index 3094f8f1b445b639f43573af6f6b5ae5eddf7227..64eb26a2f5897857f23987d23797c1a6cd02384a 100644
+--- a/ui/base/accelerators/accelerator.cc
++++ b/ui/base/accelerators/accelerator.cc
+@@ -388,6 +388,7 @@ std::u16string Accelerator::KeyCodeToName() const {
+ 
+ std::u16string Accelerator::ApplyLongFormModifiers(
+     const std::u16string& shortcut) const {
++  BRAVE_UI_BASE_ACCELERATOR_APPLY_LONG_FORM_MODIFIERS_
+   std::u16string result = shortcut;
+ 
+   if (IsShiftDown())

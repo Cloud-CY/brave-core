@@ -1,0 +1,12 @@
+diff --git a/services/preferences/tracked/device_id_win.cc b/services/preferences/tracked/device_id_win.cc
+index 48ce95f869c951e9d4d4b95df4bd54a6eab09311..6ed27513abc2915196f5990bf7169e2c95c5b8a0 100644
+--- a/services/preferences/tracked/device_id_win.cc
++++ b/services/preferences/tracked/device_id_win.cc
+@@ -14,6 +14,7 @@
+ 
+ MachineIdStatus GetDeterministicMachineSpecificId(std::string* machine_id) {
+   DCHECK(machine_id);
++  if (IsMachineIdDisabled()) { return MachineIdStatus::NOT_IMPLEMENTED; }
+ 
+   wchar_t computer_name[MAX_COMPUTERNAME_LENGTH + 1] = {};
+   DWORD computer_name_size = std::size(computer_name);

@@ -1,0 +1,36 @@
+diff --git a/third_party/blink/renderer/modules/webaudio/realtime_analyser.cc b/third_party/blink/renderer/modules/webaudio/realtime_analyser.cc
+index 164959580691a6c6d9465d6ef12fb4bcc6f63013..483cb24c641fa0bcb56b5fb3ff57e6905b2e2975 100644
+--- a/third_party/blink/renderer/modules/webaudio/realtime_analyser.cc
++++ b/third_party/blink/renderer/modules/webaudio/realtime_analyser.cc
+@@ -149,6 +149,7 @@ void RealtimeAnalyser::GetFloatTimeDomainData(
+ 
+     unsigned write_index = GetWriteIndex();
+ 
++    BRAVE_REALTIMEANALYSER_GETFLOATTIMEDOMAINDATA
+     for (unsigned i = 0; i < len; ++i) {
+       // Buffer access is protected due to modulo operation.
+       float value =
+@@ -176,6 +177,7 @@ void RealtimeAnalyser::GetByteTimeDomainData(DOMUint8Array* destination_array) {
+ 
+     unsigned write_index = GetWriteIndex();
+ 
++    BRAVE_REALTIMEANALYSER_GETBYTETIMEDOMAINDATA
+     for (unsigned i = 0; i < len; ++i) {
+       // Buffer access is protected due to modulo operation.
+       float value =
+@@ -292,6 +294,7 @@ void RealtimeAnalyser::ConvertToByteData(DOMUint8Array* destination_array) {
+     const float* source = MagnitudeBuffer().Data();
+     unsigned char* destination = destination_array->Data();
+ 
++    BRAVE_REALTIMEANALYSER_CONVERTTOBYTEDATA
+     for (unsigned i = 0; i < len; ++i) {
+       float linear_value = source[i];
+       double db_mag = audio_utilities::LinearToDecibels(linear_value);
+@@ -316,6 +319,7 @@ void RealtimeAnalyser::ConvertFloatToDb(DOMFloat32Array* destination_array) {
+     const float* source = MagnitudeBuffer().Data();
+     float* destination = destination_array->Data();
+ 
++    BRAVE_REALTIMEANALYSER_CONVERTFLOATTODB
+     for (unsigned i = 0; i < len; ++i) {
+       float linear_value = source[i];
+       double db_mag = audio_utilities::LinearToDecibels(linear_value);

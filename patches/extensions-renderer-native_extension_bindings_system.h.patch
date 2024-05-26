@@ -1,0 +1,12 @@
+diff --git a/extensions/renderer/native_extension_bindings_system.h b/extensions/renderer/native_extension_bindings_system.h
+index a1bea558281f7a2e6b781ac53cea89746eca3f3b..6e63c267f44f4587fbb33e3bbf950e5dad7f7c2a 100644
+--- a/extensions/renderer/native_extension_bindings_system.h
++++ b/extensions/renderer/native_extension_bindings_system.h
+@@ -50,6 +50,7 @@ class NativeExtensionBindingsSystem {
+   NativeExtensionBindingsSystem& operator=(
+       const NativeExtensionBindingsSystem&) = delete;
+ 
++  virtual
+   ~NativeExtensionBindingsSystem();
+ 
+   // Called when a new ScriptContext is created.

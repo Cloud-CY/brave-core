@@ -1,0 +1,21 @@
+diff --git a/chrome/installer/mini_installer/BUILD.gn b/chrome/installer/mini_installer/BUILD.gn
+index 17c3d731e269b4ea8b4d315916dcdd86671760d2..a5d4af6df8f4ebf84987e8b98199cb64ec8c0ac8 100644
+--- a/chrome/installer/mini_installer/BUILD.gn
++++ b/chrome/installer/mini_installer/BUILD.gn
+@@ -137,7 +137,7 @@ if (enable_uncompressed_archive) {
+       "$target_gen_dir/mini_installer/packed_files_uncompressed.rc"
+ }
+ 
+-action("mini_installer_archive") {
++import("//brave/chromium_src/chrome/installer/mini_installer/build.gni") brave_mini_installer_archive_action("mini_installer_archive") {
+   script = "//chrome/tools/build/win/create_installer_archive.py"
+ 
+   release_file = "chrome.release"
+@@ -313,6 +313,7 @@ template("generate_mini_installer") {
+       no_default_deps = true
+       ldflags += [ "/ENTRY:MainEntryPoint" ]
+     }
++if (defined(invoker.extra_deps)) { deps += invoker.extra_deps } }} generate_mini_installer("delta_installer_unsigned") { rc_file = "$target_gen_dir/packed_delta_files.rc" extra_deps = [ "//brave:delta_installer_archive" ] if (false) {
+   }
+ }
+ 

@@ -1,0 +1,18 @@
+# Copyright (c) 2023 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this file,
+# You can obtain one at https://mozilla.org/MPL/2.0/.
+
+import("//brave/build/config.gni")
+import("//build/config/android/rules.gni")
+import("//third_party/jni_zero/jni_zero.gni")
+
+generate_jni("jni_headers") {
+  sources = [
+    "java/org/chromium/chrome/browser/BraveAdsNativeHelper.java",
+    "java/org/chromium/chrome/browser/device_id/DeviceIdImplAndroid.java",
+    "java/org/chromium/chrome/browser/dialogs/BraveAdsNotificationDialog.java",
+    "java/org/chromium/chrome/browser/dialogs/BraveAdsSignupDialog.java",
+    "java/org/chromium/chrome/browser/notifications/BraveAds.java",
+  ]
+}

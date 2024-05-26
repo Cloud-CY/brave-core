@@ -1,0 +1,12 @@
+diff --git a/components/content_settings/core/browser/content_settings_registry.cc b/components/content_settings/core/browser/content_settings_registry.cc
+index 6385481208be786b1c4a59563e2dcfa211c3d19e..4e31088b26707599490963377075286ed4eb5741 100644
+--- a/components/content_settings/core/browser/content_settings_registry.cc
++++ b/components/content_settings/core/browser/content_settings_registry.cc
+@@ -779,6 +779,7 @@ void ContentSettingsRegistry::Init() {
+           WebsiteSettingsRegistry::PLATFORM_ANDROID,
+       ContentSettingsInfo::INHERIT_IN_INCOGNITO,
+       ContentSettingsInfo::EXCEPTIONS_ON_SECURE_AND_INSECURE_ORIGINS);
++  BRAVE_INIT
+ }
+ 
+ void ContentSettingsRegistry::Register(

@@ -1,0 +1,13 @@
+diff --git a/chrome/installer/mac/signing/signing.py b/chrome/installer/mac/signing/signing.py
+index af124ba7e693a789194342c5f504b3cb030e8ea7..c35e7e177ec7a62a0d3975bb8775ce0bed7163c7 100644
+--- a/chrome/installer/mac/signing/signing.py
++++ b/chrome/installer/mac/signing/signing.py
+@@ -23,7 +23,7 @@ class InvalidAppGeometryException(ValueError):
+ class Invoker(invoker.Base):
+ 
+     def codesign(self, config, product, path, replace_existing_signature=False):
+-        command = ['codesign', '--sign', config.identity]
++        command = ['codesign', '--force', '--sign', config.identity]
+         if replace_existing_signature:
+             command.append('--force')
+         if config.notarize.should_notarize():

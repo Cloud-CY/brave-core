@@ -1,0 +1,12 @@
+diff --git a/components/content_settings/core/browser/content_settings_pref_provider.h b/components/content_settings/core/browser/content_settings_pref_provider.h
+index 2b5db4b27a8e36d5bd36d51ab3146f7c2e805e2a..41cd8f211347c0b43401886fc316fbd98ed899d7 100644
+--- a/components/content_settings/core/browser/content_settings_pref_provider.h
++++ b/components/content_settings/core/browser/content_settings_pref_provider.h
+@@ -92,6 +92,7 @@ class PrefProvider : public UserModifiableProvider {
+   ContentSettingsPref* GetPref(ContentSettingsType type) const;
+ 
+  private:
++  friend class BravePrefProvider;
+   friend class DeadlockCheckerObserver;  // For testing.
+ 
+   void Notify(const ContentSettingsPattern& primary_pattern,

@@ -1,0 +1,12 @@
+diff --git a/build/config/chrome_build.gni b/build/config/chrome_build.gni
+index cd12d2f976e809f71271e9472b73c08f9cb705ee..6654b0c88a49172f7baf9bb5a68bf15f9ab3f3bd 100644
+--- a/build/config/chrome_build.gni
++++ b/build/config/chrome_build.gni
+@@ -1,6 +1,7 @@
+ # Copyright 2015 The Chromium Authors
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
++import("//brave/build/config/brave_build.gni")
+ 
+ declare_args() {
+   # Select the desired branding flavor. False means normal Chromium branding,
